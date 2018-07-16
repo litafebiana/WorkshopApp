@@ -5,12 +5,16 @@
  */
 package form;
 
+import java.awt.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import javax.swing.table.DefaultTableModel;
 import workshopapp.Koneksi;
 
@@ -19,7 +23,9 @@ import workshopapp.Koneksi;
  * @author Sultan
  */
 public class FormCRUD extends javax.swing.JFrame {
-
+    DefaultListModel model1 = new DefaultListModel();
+    DefaultListModel model2 = new DefaultListModel();
+    
     public void getData(){
         String kolom[] = {"Nama","Kelas","Jurusan"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
@@ -38,7 +44,7 @@ public class FormCRUD extends javax.swing.JFrame {
         }
         tbData.setModel(dtm);
     }
-    
+
     public int genNumber() {
         Random r = new Random(System.currentTimeMillis());
         int number = 30000;
@@ -47,12 +53,14 @@ public class FormCRUD extends javax.swing.JFrame {
         }
         return number;
     }
-    
+
     /**
      * Creates new form FormCRUD
      */
     public FormCRUD() {
         initComponents();
+        lKiri.setModel(model1);
+        lKanan.setModel(model2);
     }
 
     /**
@@ -83,6 +91,17 @@ public class FormCRUD extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         lNumber = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        lKiri = new javax.swing.JList<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        lKanan = new javax.swing.JList<>();
+        bPindahKananSemua = new javax.swing.JButton();
+        bPindahKananSatu = new javax.swing.JButton();
+        bPindahKiriSatu = new javax.swing.JButton();
+        bPindahKiriSemua = new javax.swing.JButton();
+        tInput = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -172,6 +191,45 @@ public class FormCRUD extends javax.swing.JFrame {
         lNumber.setText("PES-");
         getContentPane().add(lNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 430, -1, -1));
 
+        jPanel4.setBackground(new java.awt.Color(204, 255, 204));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jScrollPane2.setViewportView(lKiri);
+
+        jPanel4.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, -1));
+
+        jScrollPane3.setViewportView(lKanan);
+
+        jPanel4.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, 80, -1));
+
+        bPindahKananSemua.setText(">>");
+        jPanel4.add(bPindahKananSemua, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 50, -1));
+
+        bPindahKananSatu.setText(">");
+        bPindahKananSatu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bPindahKananSatuActionPerformed(evt);
+            }
+        });
+        jPanel4.add(bPindahKananSatu, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, 50, -1));
+
+        bPindahKiriSatu.setText("<");
+        jPanel4.add(bPindahKiriSatu, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, 50, -1));
+
+        bPindahKiriSemua.setText("<<");
+        jPanel4.add(bPindahKiriSemua, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 110, 50, -1));
+        jPanel4.add(tInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 150, -1));
+
+        jButton2.setText("+");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 150, 70, 20));
+
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 0, 250, 180));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -196,12 +254,33 @@ public class FormCRUD extends javax.swing.JFrame {
     }//GEN-LAST:event_bGetDataActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        getData();
+        //getData();
     }//GEN-LAST:event_formWindowActivated
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         lNumber.setText("PES-"+String.valueOf(genNumber()));
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void bPindahKananSatuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPindahKananSatuActionPerformed
+        if (lKiri.getSelectedIndices().length > 0) {
+            int[] selectedIndices = lKiri.getSelectedIndices();
+            //append selected to list2
+            for (int i = 0; i < selectedIndices.length; i++) {
+                model2.addElement(lKiri.getModel().getElementAt(selectedIndices[i]));
+            }
+            //remove selected from list1
+            for (int i = selectedIndices.length - 1; i >= 0; i--) {
+                model1.removeElementAt(selectedIndices[i]);
+            }
+        }
+    }//GEN-LAST:event_bPindahKananSatuActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String input = tInput.getText();
+        if(input.length()>=0){
+            model1.addElement(input);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -210,7 +289,7 @@ public class FormCRUD extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -242,8 +321,13 @@ public class FormCRUD extends javax.swing.JFrame {
     private javax.swing.JButton bEdit;
     private javax.swing.JButton bGetData;
     private javax.swing.JButton bHapus;
+    private javax.swing.JButton bPindahKananSatu;
+    private javax.swing.JButton bPindahKananSemua;
+    private javax.swing.JButton bPindahKiriSatu;
+    private javax.swing.JButton bPindahKiriSemua;
     private javax.swing.JButton bSimpan;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -252,8 +336,14 @@ public class FormCRUD extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JList<String> lKanan;
+    private javax.swing.JList<String> lKiri;
     private javax.swing.JLabel lNumber;
+    private javax.swing.JTextField tInput;
     private javax.swing.JTextField tJurusan;
     private javax.swing.JTextField tKelas;
     private javax.swing.JTextField tNama;
