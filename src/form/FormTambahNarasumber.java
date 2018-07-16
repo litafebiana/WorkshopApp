@@ -52,7 +52,7 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
             if (status == 1) {
                 JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan", "Sukses", JOptionPane.INFORMATION_MESSAGE);
                 FormUtama fu = new FormUtama();
-                fu.getDataPeserta();
+                fu.getDataNarasumber();
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Data gagal ditambahkan", "Sukses", JOptionPane.WARNING_MESSAGE);
@@ -88,7 +88,7 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
             if (status == 1) {
                 JOptionPane.showMessageDialog(this, "Data berhasil diupdate", "Sukses", JOptionPane.INFORMATION_MESSAGE);
                 FormUtama fu = new FormUtama();
-                fu.getDataPeserta();
+                fu.getDataNarasumber();
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Data gagal diupdate", "Sukses", JOptionPane.WARNING_MESSAGE);
@@ -97,7 +97,7 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
     }
     
     public void getHapusNarasumber(){
-        int reply = JOptionPane.showConfirmDialog(this, "Apakah anda yakin akan menghapus data peserta dengan ID = "+lIdNarasumber.getText(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        int reply = JOptionPane.showConfirmDialog(this, "Apakah anda yakin akan menghapus data narasumber dengan ID = "+lIdNarasumber.getText(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             String SQL = "DELETE FROM tb_narasumber WHERE id_narasumber = '"+lIdNarasumber.getText()+"'";
             int status = Koneksi.execute(SQL);
@@ -105,7 +105,7 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
             if (status==1) {
                 JOptionPane.showMessageDialog(this, "Data berhasil dihapus", "Sukses", JOptionPane.INFORMATION_MESSAGE);
                 FormUtama fu = new FormUtama();
-                fu.getDataPeserta();
+                fu.getDataNarasumber();
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Data gagal dihapus", "Gagal", JOptionPane.WARNING_MESSAGE);
