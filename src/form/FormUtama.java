@@ -1,0 +1,751 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package form;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import workshopapp.Koneksi;
+
+/**
+ *
+ * @author Sultan
+ */
+public class FormUtama extends javax.swing.JFrame {
+
+    public void getDataPeserta(){
+        String kolom[] = {"ID","Nama","Telepon","Email", "Alamat"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "SELECT id_peserta, nama_peserta, no_telp, email, alamat FROM peserta";
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNama = rs.getString(2);
+                String kolTelp = rs.getString(3);
+                String kolEmail = rs.getString(4);
+                String kolAlamat = rs.getString(5);
+                String data[] = {kolID, kolNama, kolTelp, kolEmail, kolAlamat};
+                dtm.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormCRUD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbPeserta.setModel(dtm);
+        bUbahHapus.setEnabled(false);
+    }
+    
+    public void getDataNarasumber(){
+        String kolom[] = {"ID","Nama","Telepon","Email"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "SELECT * FROM tb_narasumber";
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNama = rs.getString(2);
+                String kolTelp = rs.getString(3);
+                String kolEmail = rs.getString(4);
+                String data[] = {kolID, kolNama, kolTelp, kolEmail};
+                dtm.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormCRUD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbNarasumber.setModel(dtm);
+        bUbahHapusNarasumber.setEnabled(false);
+    }
+    
+    public void getCariPeserta(){
+        String kolom[] = {"ID","Nama","Telepon","Email", "Alamat"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "";
+        if(rbCariByID.isSelected()){
+            SQL = "SELECT id_peserta, nama_peserta, no_telp, email, alamat FROM peserta WHERE id_peserta like '%"+tCariPeserta.getText()+"%'";
+        }else if(rbCariByNama.isSelected()){
+            SQL = "SELECT id_peserta, nama_peserta, no_telp, email, alamat FROM peserta WHERE nama_peserta like '%"+tCariPeserta.getText()+"%'";
+        }
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNama = rs.getString(2);
+                String kolTelp = rs.getString(3);
+                String kolEmail = rs.getString(4);
+                String kolAlamat = rs.getString(5);
+                String data[] = {kolID, kolNama, kolTelp, kolEmail, kolAlamat};
+                dtm.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormCRUD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbPeserta.setModel(dtm);
+        bUbahHapus.setEnabled(false);
+    }
+    
+    public void getCariNarasumber(){
+        String kolom[] = {"ID","Nama","Telepon","Email"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "";
+        if(rbCariByIDNarasumber.isSelected()){
+            SQL = "SELECT * FROM tb_narasumber WHERE id_narasumber like '%"+tCariNarasumber.getText()+"%'";
+        }else if(rbCariByNamaNarasumber.isSelected()){
+            SQL = "SELECT * FROM tb_narasumber WHERE nama_narasumber like '%"+tCariNarasumber.getText()+"%'";
+        }
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNama = rs.getString(2);
+                String kolTelp = rs.getString(3);
+                String kolEmail = rs.getString(4);
+                String data[] = {kolID, kolNama, kolTelp, kolEmail};
+                dtm.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormCRUD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbNarasumber.setModel(dtm);
+        bUbahHapusNarasumber.setEnabled(false);
+    }
+    
+    /**
+     * Creates new form FormUtama
+     */
+    public FormUtama() {
+        initComponents();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        bgCariPeserta = new javax.swing.ButtonGroup();
+        bgCariNarasumber = new javax.swing.ButtonGroup();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jButton17 = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel8 = new javax.swing.JPanel();
+        jPanel13 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jTable6 = new javax.swing.JTable();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jButton13 = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel17 = new javax.swing.JLabel();
+        jTextField5 = new javax.swing.JTextField();
+        jButton14 = new javax.swing.JButton();
+        jButton15 = new javax.swing.JButton();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTable7 = new javax.swing.JTable();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jButton16 = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        bTambahPeserta = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tbPeserta = new javax.swing.JTable();
+        jLabel8 = new javax.swing.JLabel();
+        tCariPeserta = new javax.swing.JTextField();
+        bUbahHapus = new javax.swing.JButton();
+        rbCariByID = new javax.swing.JRadioButton();
+        rbCariByNama = new javax.swing.JRadioButton();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        bTambahNarasumber = new javax.swing.JButton();
+        jLabel23 = new javax.swing.JLabel();
+        tCariNarasumber = new javax.swing.JTextField();
+        bUbahHapusNarasumber = new javax.swing.JButton();
+        rbCariByIDNarasumber = new javax.swing.JRadioButton();
+        rbCariByNamaNarasumber = new javax.swing.JRadioButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tbNarasumber = new javax.swing.JTable();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jButton10 = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTable5 = new javax.swing.JTable();
+        jLabel14 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        jButton11 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        jPanel10 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jLabel4 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(800, 600));
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel5.setText("JUDUL PROGRAM");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
+
+        jButton17.setText("Keluar");
+        jPanel2.add(jButton17, new org.netbeans.lib.awtextra.AbsoluteConstraints(701, 40, 70, 20));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 780, 70));
+
+        jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel8.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel13.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel13.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTable6.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane6.setViewportView(jTable6);
+
+        jPanel13.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 190));
+
+        jLabel15.setText("Daftar Sesi");
+        jPanel13.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
+
+        jLabel16.setText("Tambah Sesi Baru");
+        jPanel13.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, -1, 20));
+
+        jButton13.setText("+");
+        jPanel13.add(jButton13, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+        jPanel13.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 750, 10));
+
+        jLabel17.setText("Cari Sesi");
+        jPanel13.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 20));
+        jPanel13.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 320, -1));
+
+        jButton14.setText("Pendaftaran");
+        jPanel13.add(jButton14, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 240, 100, 20));
+
+        jButton15.setText("Ubah / Hapus");
+        jPanel13.add(jButton15, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 240, 170, 20));
+
+        jTable7.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane7.setViewportView(jTable7);
+
+        jPanel13.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 750, 140));
+
+        jLabel18.setText("0");
+        jPanel13.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 280, 10, 20));
+
+        jLabel19.setText("Daftar Peserta Sesi");
+        jPanel13.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, 20));
+
+        jLabel20.setText("Jumlah Peserta : ");
+        jPanel13.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 280, -1, 20));
+
+        jButton16.setText("Cari");
+        jPanel13.add(jButton16, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 240, 80, 20));
+
+        jPanel8.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
+
+        jTabbedPane1.addTab("SESI", jPanel8);
+
+        jPanel4.setBackground(new java.awt.Color(0, 0, 102));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setText("Daftar Peserta");
+        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
+
+        jLabel7.setText("Tambah Peserta Baru");
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 10, -1, 20));
+
+        bTambahPeserta.setText("+");
+        bTambahPeserta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bTambahPesertaActionPerformed(evt);
+            }
+        });
+        jPanel3.add(bTambahPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+
+        tbPeserta.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tbPeserta.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tbPeserta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbPesertaMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tbPeserta);
+
+        jPanel3.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 380));
+
+        jLabel8.setText("Cari Peserta");
+        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, 20));
+
+        tCariPeserta.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                tCariPesertaCaretUpdate(evt);
+            }
+        });
+        jPanel3.add(tCariPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 430, 300, -1));
+
+        bUbahHapus.setText("Ubah / Hapus");
+        bUbahHapus.setEnabled(false);
+        bUbahHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bUbahHapusActionPerformed(evt);
+            }
+        });
+        jPanel3.add(bUbahHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 430, 180, 20));
+
+        rbCariByID.setBackground(new java.awt.Color(204, 204, 204));
+        bgCariPeserta.add(rbCariByID);
+        rbCariByID.setText("ID");
+        jPanel3.add(rbCariByID, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 430, -1, -1));
+
+        rbCariByNama.setBackground(new java.awt.Color(204, 204, 204));
+        bgCariPeserta.add(rbCariByNama);
+        rbCariByNama.setText("Nama");
+        jPanel3.add(rbCariByNama, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 430, -1, -1));
+
+        jPanel4.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
+
+        jTabbedPane1.addTab("PESERTA", jPanel4);
+
+        jPanel5.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel9.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel21.setText("Daftar Narasumber");
+        jPanel9.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
+
+        jLabel22.setText("Tambah Narasumber Baru");
+        jPanel9.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 10, -1, 20));
+
+        bTambahNarasumber.setText("+");
+        bTambahNarasumber.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bTambahNarasumberActionPerformed(evt);
+            }
+        });
+        jPanel9.add(bTambahNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+
+        jLabel23.setText("Cari Narasumber");
+        jPanel9.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, 20));
+
+        tCariNarasumber.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                tCariNarasumberCaretUpdate(evt);
+            }
+        });
+        jPanel9.add(tCariNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 430, 280, -1));
+
+        bUbahHapusNarasumber.setText("Ubah / Hapus");
+        bUbahHapusNarasumber.setEnabled(false);
+        bUbahHapusNarasumber.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bUbahHapusNarasumberActionPerformed(evt);
+            }
+        });
+        jPanel9.add(bUbahHapusNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 430, 180, 20));
+
+        rbCariByIDNarasumber.setBackground(new java.awt.Color(204, 204, 204));
+        bgCariNarasumber.add(rbCariByIDNarasumber);
+        rbCariByIDNarasumber.setSelected(true);
+        rbCariByIDNarasumber.setText("ID");
+        jPanel9.add(rbCariByIDNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 430, -1, -1));
+
+        rbCariByNamaNarasumber.setBackground(new java.awt.Color(204, 204, 204));
+        bgCariNarasumber.add(rbCariByNamaNarasumber);
+        rbCariByNamaNarasumber.setText("Nama");
+        jPanel9.add(rbCariByNamaNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 430, -1, -1));
+
+        tbNarasumber.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tbNarasumber.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbNarasumberMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(tbNarasumber);
+
+        jPanel9.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 380));
+
+        jPanel5.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
+
+        jTabbedPane1.addTab("NARASUMBER", jPanel5);
+
+        jPanel6.setBackground(new java.awt.Color(255, 255, 204));
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel12.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel12.setText("Daftar Materi");
+        jPanel12.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
+
+        jLabel13.setText("Tambah Materi Baru");
+        jPanel12.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 10, -1, 20));
+
+        jButton10.setText("+");
+        jPanel12.add(jButton10, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+
+        jTable5.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane5.setViewportView(jTable5);
+
+        jPanel12.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 380));
+
+        jLabel14.setText("Cari Materi");
+        jPanel12.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, 20));
+        jPanel12.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 430, 310, -1));
+
+        jButton11.setText("Ubah / Hapus");
+        jPanel12.add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 430, 180, 20));
+
+        jButton12.setText("Cari");
+        jPanel12.add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 430, 180, 20));
+
+        jPanel6.add(jPanel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
+
+        jTabbedPane1.addTab("MATERI", jPanel6);
+
+        jPanel7.setBackground(new java.awt.Color(204, 255, 204));
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel10.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 190));
+
+        jLabel1.setText("Daftar Ruangan");
+        jPanel10.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
+
+        jLabel2.setText("Tambah Ruangan Baru");
+        jPanel10.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 10, -1, 20));
+
+        jButton1.setText("+");
+        jPanel10.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+        jPanel10.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 750, 10));
+
+        jLabel3.setText("Cari Ruangan");
+        jPanel10.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 20));
+        jPanel10.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, 300, -1));
+
+        jButton2.setText("Cari");
+        jPanel10.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 240, 180, 20));
+
+        jButton3.setText("Ubah / Hapus");
+        jPanel10.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 240, 180, 20));
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable2);
+
+        jPanel10.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 750, 140));
+
+        jLabel4.setText("Riwayat Penggunaan Ruangan");
+        jPanel10.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, 20));
+
+        jPanel7.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
+
+        jTabbedPane1.addTab("RUANGAN", jPanel7);
+
+        jPanel1.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 780, 510));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 600));
+
+        jMenu1.setText("File");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        getDataPeserta();
+        getDataNarasumber();
+    }//GEN-LAST:event_formWindowActivated
+
+    private void bTambahPesertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahPesertaActionPerformed
+        FormTambahPeserta tp = new FormTambahPeserta();
+        tp.setVisible(true);
+        tp.roleButton("simpan");
+    }//GEN-LAST:event_bTambahPesertaActionPerformed
+
+    private void bUbahHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahHapusActionPerformed
+        int baris = tbPeserta.getSelectedRow();
+        FormTambahPeserta tp = new FormTambahPeserta();
+        tp.setVisible(true);
+        tp.roleButton("ubahhapus");
+        tp.getTextField(tbPeserta.getValueAt(baris, 0).toString());
+    }//GEN-LAST:event_bUbahHapusActionPerformed
+
+    private void tbPesertaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPesertaMouseClicked
+        int baris = tbPeserta.getSelectedRow();
+        if (baris != -1) {
+            bUbahHapus.setEnabled(true);
+        }
+    }//GEN-LAST:event_tbPesertaMouseClicked
+
+    private void tCariPesertaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tCariPesertaCaretUpdate
+        getCariPeserta();
+    }//GEN-LAST:event_tCariPesertaCaretUpdate
+
+    private void bTambahNarasumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahNarasumberActionPerformed
+        FormTambahNarasumber tp = new FormTambahNarasumber();
+        tp.setVisible(true);
+        tp.roleButton("simpan");
+    }//GEN-LAST:event_bTambahNarasumberActionPerformed
+
+    private void tCariNarasumberCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tCariNarasumberCaretUpdate
+        getCariNarasumber();
+    }//GEN-LAST:event_tCariNarasumberCaretUpdate
+
+    private void bUbahHapusNarasumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahHapusNarasumberActionPerformed
+        int baris = tbNarasumber.getSelectedRow();
+        FormTambahNarasumber tp = new FormTambahNarasumber();
+        tp.setVisible(true);
+        tp.roleButton("ubahhapus");
+        tp.getTextField(tbNarasumber.getValueAt(baris, 0).toString());
+    }//GEN-LAST:event_bUbahHapusNarasumberActionPerformed
+
+    private void tbNarasumberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbNarasumberMouseClicked
+        int baris = tbNarasumber.getSelectedRow();
+        if (baris != -1) {
+            bUbahHapusNarasumber.setEnabled(true);
+        }
+    }//GEN-LAST:event_tbNarasumberMouseClicked
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows Classic".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FormUtama.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FormUtama.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FormUtama.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FormUtama.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FormUtama().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bTambahNarasumber;
+    private javax.swing.JButton bTambahPeserta;
+    private javax.swing.JButton bUbahHapus;
+    private javax.swing.JButton bUbahHapusNarasumber;
+    private javax.swing.ButtonGroup bgCariNarasumber;
+    private javax.swing.ButtonGroup bgCariPeserta;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton15;
+    private javax.swing.JButton jButton16;
+    private javax.swing.JButton jButton17;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTable5;
+    private javax.swing.JTable jTable6;
+    private javax.swing.JTable jTable7;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JRadioButton rbCariByID;
+    private javax.swing.JRadioButton rbCariByIDNarasumber;
+    private javax.swing.JRadioButton rbCariByNama;
+    private javax.swing.JRadioButton rbCariByNamaNarasumber;
+    private javax.swing.JTextField tCariNarasumber;
+    private javax.swing.JTextField tCariPeserta;
+    private javax.swing.JTable tbNarasumber;
+    private javax.swing.JTable tbPeserta;
+    // End of variables declaration//GEN-END:variables
+}
