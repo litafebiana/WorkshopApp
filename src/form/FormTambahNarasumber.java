@@ -180,8 +180,6 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         lbMateriDilatih = new javax.swing.JList<>();
         jLabel1 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        tEmailNarasumber1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -267,14 +265,10 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
         jLabel1.setText("Materi yang dilatih");
         jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, -1, -1));
 
-        jLabel5.setText("<< Cari Materi");
-        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 160, -1, 20));
-        jPanel4.add(tEmailNarasumber1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 160, -1));
-
         jLabel7.setText("Materi yang tersedia");
         jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 410, 190));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 410, 160));
 
         jLabel3.setText("Nama");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
@@ -284,7 +278,7 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, -1, -1));
         jPanel1.add(tEmailNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 310, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 430, 370));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 430, 340));
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -396,7 +390,6 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -411,7 +404,6 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
     private javax.swing.JList<String> lbMateriDilatih;
     private javax.swing.JList<String> lbMateriTersedia;
     private javax.swing.JTextField tEmailNarasumber;
-    private javax.swing.JTextField tEmailNarasumber1;
     private javax.swing.JTextField tNamaNarasumber;
     private javax.swing.JTextField tNoTelpNarasumber;
     // End of variables declaration//GEN-END:variables

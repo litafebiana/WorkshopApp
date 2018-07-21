@@ -5,16 +5,18 @@
  */
 package form;
 
-import java.awt.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.ListModel;
 import javax.swing.table.DefaultTableModel;
 import workshopapp.Koneksi;
 
@@ -25,6 +27,7 @@ import workshopapp.Koneksi;
 public class FormCRUD extends javax.swing.JFrame {
     DefaultListModel model1 = new DefaultListModel();
     DefaultListModel model2 = new DefaultListModel();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     
     public void getData(){
         String kolom[] = {"Nama","Kelas","Jurusan"};
@@ -102,6 +105,12 @@ public class FormCRUD extends javax.swing.JFrame {
         bPindahKiriSemua = new javax.swing.JButton();
         tInput = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jButton3 = new javax.swing.JButton();
+        lTanggal = new javax.swing.JLabel();
+        dcTanggal = new com.toedter.calendar.JDateChooser();
+        tMasukinTanggal = new javax.swing.JTextField();
+        bSetTanggal = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -230,6 +239,32 @@ public class FormCRUD extends javax.swing.JFrame {
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 0, 250, 180));
 
+        jPanel5.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jButton3.setText("getDate");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel5.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
+
+        lTanggal.setText("Date");
+        jPanel5.add(lTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, -1, 20));
+        jPanel5.add(dcTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 230, -1));
+        jPanel5.add(tMasukinTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 150, -1));
+
+        bSetTanggal.setText("set");
+        bSetTanggal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bSetTanggalActionPerformed(evt);
+            }
+        });
+        jPanel5.add(bSetTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, 70, 20));
+
+        getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 180, 250, 250));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -237,7 +272,7 @@ public class FormCRUD extends javax.swing.JFrame {
         if ("".equals(tNama.getText()) || "".equals(tKelas.getText()) || "".equals(tJurusan.getText())) {
             JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
         } else {
-            String SQL = "INSERT INTO tb_crud (namaa, kelas, jurusan) "
+            String SQL = "INSERT INTO tb_crud (nama, kelas, jurusan) "
                     + "VALUES('"+tNama.getText()+"','"+tKelas.getText()+"','"+tJurusan.getText()+"')";
             int status = Koneksi.execute(SQL);
             if (status == 1) {
@@ -282,6 +317,18 @@ public class FormCRUD extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+         lTanggal.setText(sdf.format(dcTanggal.getDate()));
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void bSetTanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSetTanggalActionPerformed
+        try {
+            dcTanggal.setDate(sdf.parse(tMasukinTanggal.getText()));
+        } catch (ParseException ex) {
+            Logger.getLogger(FormCRUD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bSetTanggalActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -325,9 +372,12 @@ public class FormCRUD extends javax.swing.JFrame {
     private javax.swing.JButton bPindahKananSemua;
     private javax.swing.JButton bPindahKiriSatu;
     private javax.swing.JButton bPindahKiriSemua;
+    private javax.swing.JButton bSetTanggal;
     private javax.swing.JButton bSimpan;
+    private com.toedter.calendar.JDateChooser dcTanggal;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -337,15 +387,18 @@ public class FormCRUD extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList<String> lKanan;
     private javax.swing.JList<String> lKiri;
     private javax.swing.JLabel lNumber;
+    private javax.swing.JLabel lTanggal;
     private javax.swing.JTextField tInput;
     private javax.swing.JTextField tJurusan;
     private javax.swing.JTextField tKelas;
+    private javax.swing.JTextField tMasukinTanggal;
     private javax.swing.JTextField tNama;
     private javax.swing.JTable tbData;
     // End of variables declaration//GEN-END:variables

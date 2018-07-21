@@ -18,6 +18,36 @@ import workshopapp.Koneksi;
  */
 public class FormUtama extends javax.swing.JFrame {
 
+    public void getResetTabel(){
+        String kolom[] = {"ID","Materi"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String data[] = {null, null};
+        dtm.addRow(data);
+        tbMateriNarasumber.setModel(dtm);
+    }
+    
+    public void getDataMateriDilatih(){
+        int baris = tbNarasumber.getSelectedRow();
+        if (baris != -1) {
+            String idNarasumber = tbNarasumber.getValueAt(baris, 0).toString();
+            String kolom[] = {"ID","Materi"};
+            DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+            String SQL = "SELECT m.id_materi, m.nama_materi FROM tb_materi m JOIN tb_narasumber_materi nm ON nm.id_materi = m.id_materi WHERE nm.id_narasumber = '"+idNarasumber+"'";
+            ResultSet rs = Koneksi.executeQuery(SQL);
+            try {
+                while(rs.next()) {
+                    String kolID = rs.getString(1);
+                    String kolMateri = rs.getString(2);
+                    String data[] = {kolID, kolMateri};
+                    dtm.addRow(data);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            tbMateriNarasumber.setModel(dtm);
+        }
+    }
+    
     public void getDataPeserta(){
         String kolom[] = {"ID","Nama","Telepon","Email", "Alamat"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
@@ -240,7 +270,7 @@ public class FormUtama extends javax.swing.JFrame {
         tbNarasumber = new javax.swing.JTable();
         jSeparator3 = new javax.swing.JSeparator();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tbMateriNarasumber = new javax.swing.JTable();
         jLabel27 = new javax.swing.JLabel();
         pMateri = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
@@ -565,18 +595,15 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel9.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 190));
         jPanel9.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 750, 10));
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tbMateriNarasumber.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Materi"
             }
         ));
-        jScrollPane5.setViewportView(jTable3);
+        jScrollPane5.setViewportView(tbMateriNarasumber);
 
         jPanel9.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 750, 140));
 
@@ -681,6 +708,7 @@ public class FormUtama extends javax.swing.JFrame {
         getDataPeserta();
         getDataNarasumber();
         getDataMateri();
+        getResetTabel();
     }//GEN-LAST:event_formWindowActivated
 
     private void bTambahPesertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahPesertaActionPerformed
@@ -732,6 +760,7 @@ public class FormUtama extends javax.swing.JFrame {
         int baris = tbNarasumber.getSelectedRow();
         if (baris != -1) {
             bUbahHapusNarasumber.setEnabled(true);
+            getDataMateriDilatih();
         }
     }//GEN-LAST:event_tbNarasumberMouseClicked
 
@@ -855,7 +884,6 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable6;
     private javax.swing.JTable jTable7;
     private javax.swing.JTextField jTextField1;
@@ -877,6 +905,7 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JTextField tCariNarasumber;
     private javax.swing.JTextField tCariPeserta;
     private javax.swing.JTable tbMateri;
+    private javax.swing.JTable tbMateriNarasumber;
     private javax.swing.JTable tbNarasumber;
     private javax.swing.JTable tbPeserta;
     private javax.swing.JTabbedPane tpMenuUtama;
