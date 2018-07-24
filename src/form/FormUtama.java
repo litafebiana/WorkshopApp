@@ -331,6 +331,13 @@ public class FormUtama extends javax.swing.JFrame {
         rbCariByNamaMateri = new javax.swing.JRadioButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         tbMateri = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -360,6 +367,7 @@ public class FormUtama extends javax.swing.JFrame {
         pDasar.add(pJudulProgram, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 780, 70));
 
         tpMenuUtama.setBackground(new java.awt.Color(255, 255, 255));
+        tpMenuUtama.setEnabled(false);
 
         pSesi.setBackground(new java.awt.Color(204, 255, 255));
         pSesi.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -380,27 +388,27 @@ public class FormUtama extends javax.swing.JFrame {
         ));
         jScrollPane6.setViewportView(jTable6);
 
-        jPanel13.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 190));
+        jPanel13.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 190));
 
         jLabel15.setText("Daftar Sesi");
         jPanel13.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
 
         jLabel16.setText("Tambah Sesi Baru");
-        jPanel13.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, -1, 20));
+        jPanel13.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 10, -1, 20));
 
         jButton13.setText("+");
-        jPanel13.add(jButton13, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+        jPanel13.add(jButton13, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 50, 20));
         jPanel13.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 750, 10));
 
         jLabel17.setText("Cari Sesi");
         jPanel13.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 20));
-        jPanel13.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 320, -1));
+        jPanel13.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 260, -1));
 
         jButton14.setText("Pendaftaran");
-        jPanel13.add(jButton14, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 240, 100, 20));
+        jPanel13.add(jButton14, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 240, 100, 20));
 
         jButton15.setText("Ubah / Hapus");
-        jPanel13.add(jButton15, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 240, 170, 20));
+        jPanel13.add(jButton15, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 240, -1, 20));
 
         jTable7.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -415,19 +423,19 @@ public class FormUtama extends javax.swing.JFrame {
         ));
         jScrollPane7.setViewportView(jTable7);
 
-        jPanel13.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 750, 140));
+        jPanel13.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 620, 140));
 
         jLabel18.setText("0");
-        jPanel13.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 280, 10, 20));
+        jPanel13.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 280, 10, 20));
 
         jLabel19.setText("Daftar Peserta Sesi");
         jPanel13.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, 20));
 
         jLabel20.setText("Jumlah Peserta : ");
-        jPanel13.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 280, -1, 20));
+        jPanel13.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 280, -1, 20));
 
         jButton16.setText("Cari");
-        jPanel13.add(jButton16, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 240, 80, 20));
+        jPanel13.add(jButton16, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 240, 80, 20));
 
         pSesi.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
 
@@ -457,13 +465,13 @@ public class FormUtama extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tbRuangan);
 
-        jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 190));
+        jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 190));
 
         jLabel1.setText("Daftar Ruangan");
         jPanel10.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
 
         jLabel2.setText("Tambah Ruangan Baru");
-        jPanel10.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 10, -1, 20));
+        jPanel10.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 10, -1, 20));
 
         bTambahRuangan.setText("+");
         bTambahRuangan.addActionListener(new java.awt.event.ActionListener() {
@@ -471,7 +479,7 @@ public class FormUtama extends javax.swing.JFrame {
                 bTambahRuanganActionPerformed(evt);
             }
         });
-        jPanel10.add(bTambahRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+        jPanel10.add(bTambahRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 50, 20));
         jPanel10.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 750, 10));
 
         jLabel3.setText("Cari Ruangan");
@@ -491,7 +499,7 @@ public class FormUtama extends javax.swing.JFrame {
                 bUbahHapusRuanganActionPerformed(evt);
             }
         });
-        jPanel10.add(bUbahHapusRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 240, 180, 20));
+        jPanel10.add(bUbahHapusRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 240, 100, 20));
 
         tbRiwayatRuangan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -506,7 +514,7 @@ public class FormUtama extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tbRiwayatRuangan);
 
-        jPanel10.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 750, 140));
+        jPanel10.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 620, 140));
 
         jLabel4.setText("Riwayat Penggunaan Ruangan");
         jPanel10.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, 20));
@@ -536,7 +544,7 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
 
         jLabel7.setText("Tambah Peserta Baru");
-        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 10, -1, 20));
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 10, -1, 20));
 
         bTambahPeserta.setText("+");
         bTambahPeserta.addActionListener(new java.awt.event.ActionListener() {
@@ -544,7 +552,7 @@ public class FormUtama extends javax.swing.JFrame {
                 bTambahPesertaActionPerformed(evt);
             }
         });
-        jPanel3.add(bTambahPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+        jPanel3.add(bTambahPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 50, 20));
 
         tbPeserta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -565,7 +573,7 @@ public class FormUtama extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(tbPeserta);
 
-        jPanel3.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 380));
+        jPanel3.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 380));
 
         jLabel8.setText("Cari Peserta");
         jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, 20));
@@ -584,7 +592,7 @@ public class FormUtama extends javax.swing.JFrame {
                 bUbahHapusPesertaActionPerformed(evt);
             }
         });
-        jPanel3.add(bUbahHapusPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 430, 180, 20));
+        jPanel3.add(bUbahHapusPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 430, 100, 20));
 
         rbCariByIDPeserta.setBackground(new java.awt.Color(204, 204, 204));
         bgCariPeserta.add(rbCariByIDPeserta);
@@ -610,7 +618,7 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel9.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
 
         jLabel22.setText("Tambah Narasumber Baru");
-        jPanel9.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 10, -1, 20));
+        jPanel9.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 10, -1, 20));
 
         bTambahNarasumber.setText("+");
         bTambahNarasumber.addActionListener(new java.awt.event.ActionListener() {
@@ -618,7 +626,7 @@ public class FormUtama extends javax.swing.JFrame {
                 bTambahNarasumberActionPerformed(evt);
             }
         });
-        jPanel9.add(bTambahNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+        jPanel9.add(bTambahNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 50, 20));
 
         jLabel23.setText("Materi yang dilatih :");
         jPanel9.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, 20));
@@ -637,7 +645,7 @@ public class FormUtama extends javax.swing.JFrame {
                 bUbahHapusNarasumberActionPerformed(evt);
             }
         });
-        jPanel9.add(bUbahHapusNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 240, 180, 20));
+        jPanel9.add(bUbahHapusNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 240, 100, 20));
 
         rbCariByIDNarasumber.setBackground(new java.awt.Color(204, 204, 204));
         bgCariNarasumber.add(rbCariByIDNarasumber);
@@ -668,7 +676,7 @@ public class FormUtama extends javax.swing.JFrame {
         });
         jScrollPane4.setViewportView(tbNarasumber);
 
-        jPanel9.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 190));
+        jPanel9.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 190));
         jPanel9.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 750, 10));
 
         tbMateriNarasumber.setModel(new javax.swing.table.DefaultTableModel(
@@ -681,7 +689,7 @@ public class FormUtama extends javax.swing.JFrame {
         ));
         jScrollPane5.setViewportView(tbMateriNarasumber);
 
-        jPanel9.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 750, 140));
+        jPanel9.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 620, 140));
 
         jLabel27.setText("Cari Narasumber");
         jPanel9.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 20));
@@ -700,7 +708,7 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel11.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 20));
 
         jLabel25.setText("Tambah Materi Baru");
-        jPanel11.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 10, -1, 20));
+        jPanel11.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 10, -1, 20));
 
         bTambahMateri.setText("+");
         bTambahMateri.addActionListener(new java.awt.event.ActionListener() {
@@ -708,7 +716,7 @@ public class FormUtama extends javax.swing.JFrame {
                 bTambahMateriActionPerformed(evt);
             }
         });
-        jPanel11.add(bTambahMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+        jPanel11.add(bTambahMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 50, 20));
 
         jLabel26.setText("Cari Materi");
         jPanel11.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, 20));
@@ -727,7 +735,7 @@ public class FormUtama extends javax.swing.JFrame {
                 bUbahHapusMateriActionPerformed(evt);
             }
         });
-        jPanel11.add(bUbahHapusMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 430, 180, 20));
+        jPanel11.add(bUbahHapusMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 430, 100, 20));
 
         rbCariByIDMateri.setBackground(new java.awt.Color(204, 204, 204));
         bgCariMateri.add(rbCariByIDMateri);
@@ -758,13 +766,63 @@ public class FormUtama extends javax.swing.JFrame {
         });
         jScrollPane8.setViewportView(tbMateri);
 
-        jPanel11.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 380));
+        jPanel11.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 380));
 
         pMateri.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
 
         tpMenuUtama.addTab("MATERI", pMateri);
 
-        pDasar.add(tpMenuUtama, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 780, 510));
+        pDasar.add(tpMenuUtama, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 650, 510));
+
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Menu");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        jButton2.setText("SESI");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 110, 20));
+
+        jButton3.setText("RUANGAN");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 110, 20));
+
+        jButton1.setText("MATERI");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 110, 20));
+
+        jButton4.setText("PESERTA");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 110, 20));
+
+        jButton5.setText("NARASUMBER");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 110, 20));
+
+        pDasar.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 130, 490));
 
         getContentPane().add(pDasar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 600));
 
@@ -892,6 +950,26 @@ public class FormUtama extends javax.swing.JFrame {
         getCariRuangan();
     }//GEN-LAST:event_tCariRuanganCaretUpdate
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        tpMenuUtama.setSelectedIndex(0);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        tpMenuUtama.setSelectedIndex(1);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        tpMenuUtama.setSelectedIndex(4);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        tpMenuUtama.setSelectedIndex(2);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        tpMenuUtama.setSelectedIndex(3);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -940,11 +1018,16 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.ButtonGroup bgCariNarasumber;
     private javax.swing.ButtonGroup bgCariPeserta;
     private javax.swing.ButtonGroup bgCariRuangan;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -966,9 +1049,11 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel13;
