@@ -154,7 +154,7 @@ public class FormTambahMateri extends javax.swing.JFrame {
 
         jLabel1.setText("Nama Materi");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
-        jPanel1.add(tNamaMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 290, -1));
+        jPanel1.add(tNamaMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 310, -1));
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());

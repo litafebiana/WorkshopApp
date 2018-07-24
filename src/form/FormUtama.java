@@ -110,6 +110,26 @@ public class FormUtama extends javax.swing.JFrame {
         bUbahHapusMateri.setEnabled(false);
     }
     
+    public void getDataRuangan(){
+        String kolom[] = {"ID","Nama Ruangan","Kapasitas"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "SELECT * FROM tb_ruangan";
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNamaMateri = rs.getString(2);
+                String kolKapasitas = rs.getString(3);
+                String data[] = {kolID, kolNamaMateri, kolKapasitas};
+                dtm.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbRuangan.setModel(dtm);
+        bUbahHapusRuangan.setEnabled(false);
+    }
+    
     public void getCariPeserta(){
         String kolom[] = {"ID","Nama","Telepon","Email", "Alamat"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
@@ -187,6 +207,31 @@ public class FormUtama extends javax.swing.JFrame {
         bUbahHapusMateri.setEnabled(false);
     }
     
+    public void getCariRuangan(){
+        String kolom[] = {"ID","Nama Ruangan","Kapasitas"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "";
+        if(rbCariByIDRuangan.isSelected()){
+            SQL = "SELECT * FROM tb_ruangan WHERE id_ruangan like '%"+tCariRuangan.getText()+"%'";
+        }else if(rbCariByNamaRuangan.isSelected()){
+            SQL = "SELECT * FROM tb_ruangan WHERE nama_ruangan like '%"+tCariRuangan.getText()+"%'";
+        }
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNama = rs.getString(2);
+                String kolKapasitas = rs.getString(3);
+                String data[] = {kolID, kolNama, kolKapasitas};
+                dtm.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbRuangan.setModel(dtm);
+        bUbahHapusRuangan.setEnabled(false);
+    }
+    
     /**
      * Creates new form FormUtama
      */
@@ -206,6 +251,7 @@ public class FormUtama extends javax.swing.JFrame {
         bgCariPeserta = new javax.swing.ButtonGroup();
         bgCariNarasumber = new javax.swing.ButtonGroup();
         bgCariMateri = new javax.swing.ButtonGroup();
+        bgCariRuangan = new javax.swing.ButtonGroup();
         pDasar = new javax.swing.JPanel();
         pJudulProgram = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -232,18 +278,19 @@ public class FormUtama extends javax.swing.JFrame {
         pRuangan = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbRuangan = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        bTambahRuangan = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        tCariRuangan = new javax.swing.JTextField();
+        bUbahHapusRuangan = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tbRiwayatRuangan = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
+        rbCariByIDRuangan = new javax.swing.JRadioButton();
+        rbCariByNamaRuangan = new javax.swing.JRadioButton();
         pPeserta = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
@@ -392,7 +439,7 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel10.setBackground(new java.awt.Color(204, 204, 204));
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbRuangan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -403,7 +450,12 @@ public class FormUtama extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tbRuangan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbRuanganMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbRuangan);
 
         jPanel10.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 750, 190));
 
@@ -413,21 +465,35 @@ public class FormUtama extends javax.swing.JFrame {
         jLabel2.setText("Tambah Ruangan Baru");
         jPanel10.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 10, -1, 20));
 
-        jButton1.setText("+");
-        jPanel10.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
+        bTambahRuangan.setText("+");
+        bTambahRuangan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bTambahRuanganActionPerformed(evt);
+            }
+        });
+        jPanel10.add(bTambahRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, 50, 20));
         jPanel10.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 750, 10));
 
         jLabel3.setText("Cari Ruangan");
         jPanel10.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 20));
-        jPanel10.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, 300, -1));
 
-        jButton2.setText("Cari");
-        jPanel10.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 240, 180, 20));
+        tCariRuangan.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                tCariRuanganCaretUpdate(evt);
+            }
+        });
+        jPanel10.add(tCariRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, 300, -1));
 
-        jButton3.setText("Ubah / Hapus");
-        jPanel10.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 240, 180, 20));
+        bUbahHapusRuangan.setText("Ubah / Hapus");
+        bUbahHapusRuangan.setEnabled(false);
+        bUbahHapusRuangan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bUbahHapusRuanganActionPerformed(evt);
+            }
+        });
+        jPanel10.add(bUbahHapusRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 240, 180, 20));
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tbRiwayatRuangan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -438,12 +504,23 @@ public class FormUtama extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tbRiwayatRuangan);
 
         jPanel10.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 750, 140));
 
         jLabel4.setText("Riwayat Penggunaan Ruangan");
         jPanel10.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, 20));
+
+        rbCariByIDRuangan.setBackground(new java.awt.Color(204, 204, 204));
+        bgCariRuangan.add(rbCariByIDRuangan);
+        rbCariByIDRuangan.setSelected(true);
+        rbCariByIDRuangan.setText("ID");
+        jPanel10.add(rbCariByIDRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 240, -1, -1));
+
+        rbCariByNamaRuangan.setBackground(new java.awt.Color(204, 204, 204));
+        bgCariRuangan.add(rbCariByNamaRuangan);
+        rbCariByNamaRuangan.setText("Nama");
+        jPanel10.add(rbCariByNamaRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 240, -1, -1));
 
         pRuangan.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
 
@@ -511,7 +588,6 @@ public class FormUtama extends javax.swing.JFrame {
 
         rbCariByIDPeserta.setBackground(new java.awt.Color(204, 204, 204));
         bgCariPeserta.add(rbCariByIDPeserta);
-        rbCariByIDPeserta.setSelected(true);
         rbCariByIDPeserta.setText("ID");
         jPanel3.add(rbCariByIDPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 430, -1, -1));
 
@@ -597,7 +673,7 @@ public class FormUtama extends javax.swing.JFrame {
 
         tbMateriNarasumber.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null}
             },
             new String [] {
                 "ID", "Materi"
@@ -709,6 +785,7 @@ public class FormUtama extends javax.swing.JFrame {
         getDataNarasumber();
         getDataMateri();
         getResetTabel();
+        getDataRuangan();
     }//GEN-LAST:event_formWindowActivated
 
     private void bTambahPesertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahPesertaActionPerformed
@@ -744,6 +821,7 @@ public class FormUtama extends javax.swing.JFrame {
 
     private void tCariNarasumberCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tCariNarasumberCaretUpdate
         getCariNarasumber();
+        getResetTabel();
     }//GEN-LAST:event_tCariNarasumberCaretUpdate
 
     private void bUbahHapusNarasumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahHapusNarasumberActionPerformed
@@ -789,6 +867,31 @@ public class FormUtama extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tbMateriMouseClicked
 
+    private void bTambahRuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahRuanganActionPerformed
+        FormTambahRuangan tr = new FormTambahRuangan();
+        tr.setVisible(true);
+        tr.roleButton("simpan");
+    }//GEN-LAST:event_bTambahRuanganActionPerformed
+
+    private void bUbahHapusRuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahHapusRuanganActionPerformed
+        int baris = tbRuangan.getSelectedRow();
+        FormTambahRuangan tr = new FormTambahRuangan();
+        tr.setVisible(true);
+        tr.roleButton("ubahhapus");
+        tr.getTextField(tbRuangan.getValueAt(baris, 0).toString());
+    }//GEN-LAST:event_bUbahHapusRuanganActionPerformed
+
+    private void tbRuanganMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRuanganMouseClicked
+        int baris = tbRuangan.getSelectedRow();
+        if (baris != -1) {
+            bUbahHapusRuangan.setEnabled(true);
+        }
+    }//GEN-LAST:event_tbRuanganMouseClicked
+
+    private void tCariRuanganCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tCariRuanganCaretUpdate
+        getCariRuangan();
+    }//GEN-LAST:event_tCariRuanganCaretUpdate
+
     /**
      * @param args the command line arguments
      */
@@ -828,20 +931,20 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JButton bTambahMateri;
     private javax.swing.JButton bTambahNarasumber;
     private javax.swing.JButton bTambahPeserta;
+    private javax.swing.JButton bTambahRuangan;
     private javax.swing.JButton bUbahHapusMateri;
     private javax.swing.JButton bUbahHapusNarasumber;
     private javax.swing.JButton bUbahHapusPeserta;
+    private javax.swing.JButton bUbahHapusRuangan;
     private javax.swing.ButtonGroup bgCariMateri;
     private javax.swing.ButtonGroup bgCariNarasumber;
     private javax.swing.ButtonGroup bgCariPeserta;
-    private javax.swing.JButton jButton1;
+    private javax.swing.ButtonGroup bgCariRuangan;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -882,11 +985,8 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable6;
     private javax.swing.JTable jTable7;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JPanel pDasar;
     private javax.swing.JPanel pJudulProgram;
@@ -898,16 +998,21 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JRadioButton rbCariByIDMateri;
     private javax.swing.JRadioButton rbCariByIDNarasumber;
     private javax.swing.JRadioButton rbCariByIDPeserta;
+    private javax.swing.JRadioButton rbCariByIDRuangan;
     private javax.swing.JRadioButton rbCariByNamaMateri;
     private javax.swing.JRadioButton rbCariByNamaNarasumber;
     private javax.swing.JRadioButton rbCariByNamaPeserta;
+    private javax.swing.JRadioButton rbCariByNamaRuangan;
     private javax.swing.JTextField tCariMateri;
     private javax.swing.JTextField tCariNarasumber;
     private javax.swing.JTextField tCariPeserta;
+    private javax.swing.JTextField tCariRuangan;
     private javax.swing.JTable tbMateri;
     private javax.swing.JTable tbMateriNarasumber;
     private javax.swing.JTable tbNarasumber;
     private javax.swing.JTable tbPeserta;
+    private javax.swing.JTable tbRiwayatRuangan;
+    private javax.swing.JTable tbRuangan;
     private javax.swing.JTabbedPane tpMenuUtama;
     // End of variables declaration//GEN-END:variables
 }

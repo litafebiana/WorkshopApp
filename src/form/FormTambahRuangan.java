@@ -5,12 +5,114 @@
  */
 package form;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import workshopapp.Koneksi;
+
 /**
  *
  * @author Sultan
  */
 public class FormTambahRuangan extends javax.swing.JFrame {
 
+    public void roleButton(String role){
+        if (role.equals("simpan")){
+            bSimpanRuangan.setEnabled(true);
+            bUbahRuangan.setEnabled(false);
+            bHapusRuangan.setEnabled(false);
+            lIdRuangan.setVisible(false);
+        }else if (role.equals("ubahhapus")){
+            bSimpanRuangan.setEnabled(false);
+            bUbahRuangan.setEnabled(true);
+            bHapusRuangan.setEnabled(true);
+            lIdRuangan.setVisible(false);
+        }
+    }
+    
+    public int genID() {
+        Random r = new Random(System.currentTimeMillis());
+        int number = 100;
+        for(int counter=1; counter<=1;counter++){
+            number = 100+r.nextInt(600);
+        }
+        return number;
+    }
+    
+    public void getSimpanRuangan(){
+        if ("".equals(tNamaRuangan.getText()) || "".equals(tKapasitas.getText())) {
+            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            String SQL = "INSERT INTO tb_ruangan (id_ruangan, nama_ruangan, kapasitas) "
+                    + "VALUES('RUANG-2018"+genID()+"','"+tNamaRuangan.getText()+"','"+tKapasitas.getText()+"')";
+            int status = Koneksi.execute(SQL);
+            if (status == 1) {
+                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                FormUtama fu = new FormUtama();
+                fu.getDataRuangan();
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Data gagal ditambahkan", "Sukses", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
+    
+    public void getTextField(String id){
+        String SQL = "SELECT * FROM tb_ruangan where id_ruangan = '"+id+"'";
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                lIdRuangan.setText(rs.getString(1));
+                tNamaRuangan.setText(rs.getString(2));
+                tKapasitas.setText(rs.getString(3));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormTambahRuangan.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void getUbahRuangan(){
+        if ("".equals(tNamaRuangan.getText()) || "".equals(tKapasitas.getText())) {
+            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            String SQL = "UPDATE tb_ruangan SET "
+                    + "nama_ruangan = '"+tNamaRuangan.getText()+"',"
+                    + "kapasitas = '"+tKapasitas.getText()+"' "
+                    + "WHERE id_ruangan='"+lIdRuangan.getText()+"'";
+            int status = Koneksi.execute(SQL);
+            if (status == 1) {
+                JOptionPane.showMessageDialog(this, "Data berhasil diupdate", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                FormUtama fu = new FormUtama();
+                fu.getDataRuangan();
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Data gagal diupdate", "Sukses", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
+    
+    public void getHapusRuangan(){
+        int reply = JOptionPane.showConfirmDialog(this, "Apakah anda yakin akan menghapus data ruangan dengan ID = "+lIdRuangan.getText(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+            String SQL = "DELETE FROM tb_ruangan WHERE id_ruangan = '"+lIdRuangan.getText()+"'";
+            int status = Koneksi.execute(SQL);
+            
+            if (status==1) {
+                JOptionPane.showMessageDialog(this, "Data berhasil dihapus", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                FormUtama fu = new FormUtama();
+                fu.getDataRuangan();
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Data gagal dihapus", "Gagal", JOptionPane.WARNING_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Hmmm.!!! -___-");
+        }
+    }
+    
     /**
      * Creates new form FormTambahRuangan
      */
@@ -27,21 +129,90 @@ public class FormTambahRuangan extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel3 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        tNamaRuangan = new javax.swing.JTextField();
+        tKapasitas = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        bSimpanRuangan = new javax.swing.JButton();
+        bUbahRuangan = new javax.swing.JButton();
+        bHapusRuangan = new javax.swing.JButton();
+        lIdRuangan = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        pack();
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel8.setText("RUANGAN BARU");
+        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 430, 70));
+
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel2.setText("Kapasitas");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, -1, -1));
+        jPanel1.add(tNamaRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 310, -1));
+        jPanel1.add(tKapasitas, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, 310, -1));
+
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        bSimpanRuangan.setText("Simpan");
+        bSimpanRuangan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bSimpanRuanganActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bSimpanRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 90, 20));
+
+        bUbahRuangan.setText("Ubah");
+        bUbahRuangan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bUbahRuanganActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bUbahRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 90, 20));
+
+        bHapusRuangan.setText("Hapus");
+        bHapusRuangan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bHapusRuanganActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bHapusRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, 90, 20));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 310, 40));
+
+        lIdRuangan.setText("id_ruangan");
+        jPanel1.add(lIdRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, -1, -1));
+
+        jLabel3.setText("Nama Ruangan");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 430, 120));
+
+        setSize(new java.awt.Dimension(447, 229));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void bSimpanRuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanRuanganActionPerformed
+        getSimpanRuangan();
+    }//GEN-LAST:event_bSimpanRuanganActionPerformed
+
+    private void bUbahRuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahRuanganActionPerformed
+        getUbahRuangan();
+    }//GEN-LAST:event_bUbahRuanganActionPerformed
+
+    private void bHapusRuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusRuanganActionPerformed
+        getHapusRuangan();
+    }//GEN-LAST:event_bHapusRuanganActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +250,17 @@ public class FormTambahRuangan extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bHapusRuangan;
+    private javax.swing.JButton bSimpanRuangan;
+    private javax.swing.JButton bUbahRuangan;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lIdRuangan;
+    private javax.swing.JTextField tKapasitas;
+    private javax.swing.JTextField tNamaRuangan;
     // End of variables declaration//GEN-END:variables
 }

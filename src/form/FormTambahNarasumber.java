@@ -288,7 +288,7 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 430, 70));
 
-        pack();
+        setSize(new java.awt.Dimension(446, 448));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
