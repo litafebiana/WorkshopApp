@@ -5,10 +5,13 @@
  */
 package form;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import workshopapp.Koneksi;
 
@@ -18,12 +21,45 @@ import workshopapp.Koneksi;
  */
 public class FormUtama extends javax.swing.JFrame {
 
+    public final void setJam(){
+        ActionListener taskPerformer = new ActionListener() {
+
+            public void actionPerformed(ActionEvent evt) {
+                String nol_jam = "", nol_menit = "",nol_detik = "";
+
+                java.util.Date dateTime = new java.util.Date();
+                int nilai_jam = dateTime.getHours();
+                int nilai_menit = dateTime.getMinutes();
+                int nilai_detik = dateTime.getSeconds();
+
+                if(nilai_jam <= 9) nol_jam= "0";
+                if(nilai_menit <= 9) nol_menit= "0";
+                if(nilai_detik <= 9) nol_detik= "0";
+
+                String jam = nol_jam + Integer.toString(nilai_jam);
+                String menit = nol_menit + Integer.toString(nilai_menit);
+                String detik = nol_detik + Integer.toString(nilai_detik);
+
+                lJam.setText(jam+":"+menit+":"+detik);
+            }
+        };
+        new Timer(1000, taskPerformer).start();
+    }
+    
     public void getResetTabel(){
         String kolom[] = {"ID","Materi"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
         String data[] = {null, null};
         dtm.addRow(data);
         tbMateriNarasumber.setModel(dtm);
+    }
+    
+    public void getResetTabelRiwayat(){
+        String kolom[] = {"ID","Nama Narasumber","Nama Materi","Tema","Tanggal Mulai","Tanggal Selesai"  ,"Kuota"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String data[] = {null, null};
+        dtm.addRow(data);
+        tbRiwayatRuangan.setModel(dtm);
     }
     
     public void getDataMateriDilatih(){
@@ -45,6 +81,33 @@ public class FormUtama extends javax.swing.JFrame {
                 Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
             }
             tbMateriNarasumber.setModel(dtm);
+        }
+    }
+    
+    public void getDataRiwayatRuangan(){
+        int baris = tbRuangan.getSelectedRow();
+        if (baris != -1) {
+            String idRuangan = tbRuangan.getValueAt(baris, 0).toString();
+            String kolom[] = {"ID","Nama Narasumber","Nama Materi","Tema","Tanggal Mulai","Tanggal Selesai"  ,"Kuota"};
+            DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+            String SQL = "SELECT id_sesi, (SELECT nama_narasumber FROM tb_narasumber n WHERE n.id_narasumber = s.id_narasumber) AS nama_narasumber, (SELECT nama_materi FROM tb_materi m WHERE m.id_materi = s.id_materi) AS nama_materi, tema, tanggal_mulai, tanggal_selesai, kuota FROM tb_sesi s WHERE id_ruangan = '"+idRuangan+"'";
+            ResultSet rs = Koneksi.executeQuery(SQL);
+            try {
+                while(rs.next()) {
+                    String kolID = rs.getString(1);
+                    String kolNamaNarasumber = rs.getString(2);
+                    String kolMateri = rs.getString(3);
+                    String koltema = rs.getString(4);
+                    String kolTanggalMulai = rs.getString(5);
+                    String kolTanggalSelesai = rs.getString(6);
+                    String kolKuota = rs.getString(7);
+                    String data[] = {kolID,kolNamaNarasumber,kolMateri,koltema,kolTanggalMulai,kolTanggalSelesai,kolKuota};
+                    dtm.addRow(data);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            tbRiwayatRuangan.setModel(dtm);
         }
     }
     
@@ -128,6 +191,31 @@ public class FormUtama extends javax.swing.JFrame {
         }
         tbRuangan.setModel(dtm);
         bUbahHapusRuangan.setEnabled(false);
+    }
+    
+    public void getDataSesi(){
+        String kolom[] = {"ID","Nama Narasumber","Nama Materi","Nama Ruangan","Tema","Tanggal Mulai","Tanggal Selesai"  ,"Kuota"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "SELECT id_sesi, (SELECT nama_narasumber FROM tb_narasumber n WHERE n.id_narasumber = s.id_narasumber) AS nama_narasumber, (SELECT nama_materi FROM tb_materi m WHERE m.id_materi = s.id_materi) AS nama_materi, (SELECT nama_ruangan FROM tb_ruangan r WHERE r.id_ruangan = s.id_ruangan) AS nama_ruangan, tema, tanggal_mulai, tanggal_selesai, kuota FROM tb_sesi s";
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNamaNarasumber = rs.getString(2);
+                String kolMateri = rs.getString(3);
+                String kolRuangan = rs.getString(4);
+                String koltema = rs.getString(5);
+                String kolTanggalMulai = rs.getString(6);
+                String kolTanggalSelesai = rs.getString(7);
+                String kolKuota = rs.getString(8);
+                String data[] = {kolID,kolNamaNarasumber,kolMateri,kolRuangan,koltema,kolTanggalMulai,kolTanggalSelesai,kolKuota};
+                dtm.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbSesi.setModel(dtm);
+        //bUbahHapusRuangan.setEnabled(false);
     }
     
     public void getCariPeserta(){
@@ -237,6 +325,7 @@ public class FormUtama extends javax.swing.JFrame {
      */
     public FormUtama() {
         initComponents();
+        setJam();
     }
 
     /**
@@ -255,12 +344,11 @@ public class FormUtama extends javax.swing.JFrame {
         pDasar = new javax.swing.JPanel();
         pJudulProgram = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jButton17 = new javax.swing.JButton();
         tpMenuUtama = new javax.swing.JTabbedPane();
         pSesi = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        jTable6 = new javax.swing.JTable();
+        tbSesi = new javax.swing.JTable();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jButton13 = new javax.swing.JButton();
@@ -331,18 +419,21 @@ public class FormUtama extends javax.swing.JFrame {
         rbCariByNamaMateri = new javax.swing.JRadioButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         tbMateri = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
+        pMenu = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton17 = new javax.swing.JButton();
+        lJam = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Aplikasi Workshop");
         setMaximumSize(new java.awt.Dimension(800, 600));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -361,10 +452,7 @@ public class FormUtama extends javax.swing.JFrame {
         jLabel5.setText("JUDUL PROGRAM");
         pJudulProgram.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
 
-        jButton17.setText("Keluar");
-        pJudulProgram.add(jButton17, new org.netbeans.lib.awtextra.AbsoluteConstraints(701, 40, 70, 20));
-
-        pDasar.add(pJudulProgram, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 780, 70));
+        pDasar.add(pJudulProgram, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 780, 60));
 
         tpMenuUtama.setBackground(new java.awt.Color(255, 255, 255));
         tpMenuUtama.setEnabled(false);
@@ -375,7 +463,7 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel13.setBackground(new java.awt.Color(204, 204, 204));
         jPanel13.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable6.setModel(new javax.swing.table.DefaultTableModel(
+        tbSesi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -386,7 +474,7 @@ public class FormUtama extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane6.setViewportView(jTable6);
+        jScrollPane6.setViewportView(tbSesi);
 
         jPanel13.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 190));
 
@@ -397,6 +485,11 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel13.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 10, -1, 20));
 
         jButton13.setText("+");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
         jPanel13.add(jButton13, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 50, 20));
         jPanel13.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 750, 10));
 
@@ -423,7 +516,7 @@ public class FormUtama extends javax.swing.JFrame {
         ));
         jScrollPane7.setViewportView(jTable7);
 
-        jPanel13.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 620, 140));
+        jPanel13.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 620, 160));
 
         jLabel18.setText("0");
         jPanel13.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 280, 10, 20));
@@ -437,7 +530,7 @@ public class FormUtama extends javax.swing.JFrame {
         jButton16.setText("Cari");
         jPanel13.add(jButton16, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 240, 80, 20));
 
-        pSesi.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
+        pSesi.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 650, 480));
 
         tpMenuUtama.addTab("SESI", pSesi);
 
@@ -514,7 +607,7 @@ public class FormUtama extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tbRiwayatRuangan);
 
-        jPanel10.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 620, 140));
+        jPanel10.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 620, 160));
 
         jLabel4.setText("Riwayat Penggunaan Ruangan");
         jPanel10.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, 20));
@@ -530,7 +623,7 @@ public class FormUtama extends javax.swing.JFrame {
         rbCariByNamaRuangan.setText("Nama");
         jPanel10.add(rbCariByNamaRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 240, -1, -1));
 
-        pRuangan.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
+        pRuangan.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 650, 480));
 
         tpMenuUtama.addTab("RUANGAN", pRuangan);
 
@@ -573,17 +666,17 @@ public class FormUtama extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(tbPeserta);
 
-        jPanel3.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 380));
+        jPanel3.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 400));
 
         jLabel8.setText("Cari Peserta");
-        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, 20));
+        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, -1, 20));
 
         tCariPeserta.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 tCariPesertaCaretUpdate(evt);
             }
         });
-        jPanel3.add(tCariPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 430, 300, -1));
+        jPanel3.add(tCariPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 450, 300, -1));
 
         bUbahHapusPeserta.setText("Ubah / Hapus");
         bUbahHapusPeserta.setEnabled(false);
@@ -592,19 +685,20 @@ public class FormUtama extends javax.swing.JFrame {
                 bUbahHapusPesertaActionPerformed(evt);
             }
         });
-        jPanel3.add(bUbahHapusPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 430, 100, 20));
+        jPanel3.add(bUbahHapusPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 450, 100, 20));
 
         rbCariByIDPeserta.setBackground(new java.awt.Color(204, 204, 204));
         bgCariPeserta.add(rbCariByIDPeserta);
+        rbCariByIDPeserta.setSelected(true);
         rbCariByIDPeserta.setText("ID");
-        jPanel3.add(rbCariByIDPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 430, -1, -1));
+        jPanel3.add(rbCariByIDPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 450, -1, -1));
 
         rbCariByNamaPeserta.setBackground(new java.awt.Color(204, 204, 204));
         bgCariPeserta.add(rbCariByNamaPeserta);
         rbCariByNamaPeserta.setText("Nama");
-        jPanel3.add(rbCariByNamaPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 430, -1, -1));
+        jPanel3.add(rbCariByNamaPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 450, -1, -1));
 
-        pPeserta.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
+        pPeserta.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 650, 480));
 
         tpMenuUtama.addTab("PESERTA", pPeserta);
 
@@ -689,12 +783,12 @@ public class FormUtama extends javax.swing.JFrame {
         ));
         jScrollPane5.setViewportView(tbMateriNarasumber);
 
-        jPanel9.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 620, 140));
+        jPanel9.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 620, 160));
 
         jLabel27.setText("Cari Narasumber");
         jPanel9.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 20));
 
-        pNarasumber.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
+        pNarasumber.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 650, 480));
 
         tpMenuUtama.addTab("NARASUMBER", pNarasumber);
 
@@ -719,14 +813,14 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel11.add(bTambahMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 50, 20));
 
         jLabel26.setText("Cari Materi");
-        jPanel11.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, 20));
+        jPanel11.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, -1, 20));
 
         tCariMateri.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 tCariMateriCaretUpdate(evt);
             }
         });
-        jPanel11.add(tCariMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 430, 310, -1));
+        jPanel11.add(tCariMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 450, 310, -1));
 
         bUbahHapusMateri.setText("Ubah / Hapus");
         bUbahHapusMateri.setEnabled(false);
@@ -735,18 +829,18 @@ public class FormUtama extends javax.swing.JFrame {
                 bUbahHapusMateriActionPerformed(evt);
             }
         });
-        jPanel11.add(bUbahHapusMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 430, 100, 20));
+        jPanel11.add(bUbahHapusMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 450, 100, 20));
 
         rbCariByIDMateri.setBackground(new java.awt.Color(204, 204, 204));
         bgCariMateri.add(rbCariByIDMateri);
         rbCariByIDMateri.setSelected(true);
         rbCariByIDMateri.setText("ID");
-        jPanel11.add(rbCariByIDMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 430, -1, -1));
+        jPanel11.add(rbCariByIDMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 450, -1, -1));
 
         rbCariByNamaMateri.setBackground(new java.awt.Color(204, 204, 204));
         bgCariMateri.add(rbCariByNamaMateri);
         rbCariByNamaMateri.setText("Nama");
-        jPanel11.add(rbCariByNamaMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 430, -1, -1));
+        jPanel11.add(rbCariByNamaMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 450, -1, -1));
 
         tbMateri.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -766,21 +860,22 @@ public class FormUtama extends javax.swing.JFrame {
         });
         jScrollPane8.setViewportView(tbMateri);
 
-        jPanel11.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 380));
+        jPanel11.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 400));
 
-        pMateri.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 780, 460));
+        pMateri.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 650, 480));
 
         tpMenuUtama.addTab("MATERI", pMateri);
 
-        pDasar.add(tpMenuUtama, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 650, 510));
+        pDasar.add(tpMenuUtama, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 60, 650, 530));
 
-        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        pMenu.setBackground(new java.awt.Color(51, 51, 51));
+        pMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Menu");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("MENU");
+        pMenu.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 110, -1));
 
         jButton2.setText("SESI");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -788,7 +883,7 @@ public class FormUtama extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 110, 20));
+        pMenu.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 110, 20));
 
         jButton3.setText("RUANGAN");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -796,7 +891,7 @@ public class FormUtama extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 110, 20));
+        pMenu.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 110, 20));
 
         jButton1.setText("MATERI");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -804,7 +899,7 @@ public class FormUtama extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 110, 20));
+        pMenu.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 110, 20));
 
         jButton4.setText("PESERTA");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -812,7 +907,7 @@ public class FormUtama extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 110, 20));
+        pMenu.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 110, 20));
 
         jButton5.setText("NARASUMBER");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -820,9 +915,17 @@ public class FormUtama extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 110, 20));
+        pMenu.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 110, 20));
 
-        pDasar.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 130, 490));
+        jButton17.setText("KELUAR");
+        pMenu.add(jButton17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 460, 110, 20));
+
+        lJam.setForeground(new java.awt.Color(204, 204, 204));
+        lJam.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lJam.setText("00:00:00");
+        pMenu.add(lJam, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 110, 20));
+
+        pDasar.add(pMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 130, 510));
 
         getContentPane().add(pDasar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 600));
 
@@ -844,6 +947,8 @@ public class FormUtama extends javax.swing.JFrame {
         getDataMateri();
         getResetTabel();
         getDataRuangan();
+        getDataSesi();
+        getResetTabelRiwayat();
     }//GEN-LAST:event_formWindowActivated
 
     private void bTambahPesertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahPesertaActionPerformed
@@ -943,11 +1048,13 @@ public class FormUtama extends javax.swing.JFrame {
         int baris = tbRuangan.getSelectedRow();
         if (baris != -1) {
             bUbahHapusRuangan.setEnabled(true);
+            getDataRiwayatRuangan();
         }
     }//GEN-LAST:event_tbRuanganMouseClicked
 
     private void tCariRuanganCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tCariRuanganCaretUpdate
         getCariRuangan();
+        getResetTabelRiwayat();
     }//GEN-LAST:event_tCariRuanganCaretUpdate
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -969,6 +1076,12 @@ public class FormUtama extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         tpMenuUtama.setSelectedIndex(3);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        FormTambahSesi fts = new FormTambahSesi();
+        fts.setVisible(true);
+        fts.getDataRuangan();
+    }//GEN-LAST:event_jButton13ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1053,7 +1166,6 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel13;
@@ -1070,12 +1182,13 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JTable jTable6;
     private javax.swing.JTable jTable7;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JLabel lJam;
     private javax.swing.JPanel pDasar;
     private javax.swing.JPanel pJudulProgram;
     private javax.swing.JPanel pMateri;
+    private javax.swing.JPanel pMenu;
     private javax.swing.JPanel pNarasumber;
     private javax.swing.JPanel pPeserta;
     private javax.swing.JPanel pRuangan;
@@ -1098,6 +1211,7 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JTable tbPeserta;
     private javax.swing.JTable tbRiwayatRuangan;
     private javax.swing.JTable tbRuangan;
+    private javax.swing.JTable tbSesi;
     private javax.swing.JTabbedPane tpMenuUtama;
     // End of variables declaration//GEN-END:variables
 }

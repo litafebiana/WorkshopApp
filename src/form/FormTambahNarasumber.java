@@ -309,7 +309,10 @@ public class FormTambahNarasumber extends javax.swing.JFrame {
             int[] selectedIndices = lbMateriTersedia.getSelectedIndices();
             
             for (int i = 0; i < selectedIndices.length; i++) {
-                String SQL = "INSERT INTO tb_narasumber_materi (id_narasumber, id_materi) SELECT '"+lIdNarasumber.getText()+"', id_materi FROM tb_materi WHERE nama_materi = '"+lbMateriTersedia.getModel().getElementAt(selectedIndices[i])+"'";
+                String SQL = "INSERT INTO tb_narasumber_materi (id_narasumber, id_materi) VALUES ("
+                        + "'"+lIdNarasumber.getText()+"',"
+                        + "(SELECT id_materi FROM tb_materi WHERE nama_materi = '"+lbMateriTersedia.getModel().getElementAt(selectedIndices[i])+"')"
+                        + ");";
                 int status = Koneksi.execute(SQL);
                 if (status == 1) {
                     JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan", "Sukses", JOptionPane.INFORMATION_MESSAGE);

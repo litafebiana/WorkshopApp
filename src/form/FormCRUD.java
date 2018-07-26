@@ -111,6 +111,10 @@ public class FormCRUD extends javax.swing.JFrame {
         dcTanggal = new com.toedter.calendar.JDateChooser();
         tMasukinTanggal = new javax.swing.JTextField();
         bSetTanggal = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        tLama = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
+        lNewDate = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -263,6 +267,21 @@ public class FormCRUD extends javax.swing.JFrame {
         });
         jPanel5.add(bSetTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, 70, 20));
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel5.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 150, -1));
+        jPanel5.add(tLama, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 150, -1));
+
+        jButton4.setText("jButton4");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jPanel5.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, -1, -1));
+
+        lNewDate.setText("jLabel6");
+        jPanel5.add(lNewDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, -1));
+
         getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 180, 250, 250));
 
         pack();
@@ -329,6 +348,15 @@ public class FormCRUD extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_bSetTanggalActionPerformed
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        int lama = Integer.parseInt(tLama.getText()) - 1;
+        Calendar c = Calendar.getInstance();
+        c.setTime(dcTanggal.getDate());
+        c.add(Calendar.DATE, lama);
+        Date newDate = c.getTime();
+        lNewDate.setText(String.valueOf(sdf.format(newDate)));
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -378,6 +406,8 @@ public class FormCRUD extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -393,11 +423,13 @@ public class FormCRUD extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList<String> lKanan;
     private javax.swing.JList<String> lKiri;
+    private javax.swing.JLabel lNewDate;
     private javax.swing.JLabel lNumber;
     private javax.swing.JLabel lTanggal;
     private javax.swing.JTextField tInput;
     private javax.swing.JTextField tJurusan;
     private javax.swing.JTextField tKelas;
+    private javax.swing.JTextField tLama;
     private javax.swing.JTextField tMasukinTanggal;
     private javax.swing.JTextField tNama;
     private javax.swing.JTable tbData;
