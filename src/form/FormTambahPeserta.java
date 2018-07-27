@@ -71,7 +71,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                 fu.getDataPeserta();
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Data gagal ditambahkan", "Sukses", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Data gagal ditambahkan", "Gagal", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
