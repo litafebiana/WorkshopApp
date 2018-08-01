@@ -24,14 +24,40 @@ import workshopapp.Koneksi;
  */
 public class FormTambahSesi extends javax.swing.JFrame {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    
     /**
      * Creates new form FormTambahSesi
      */
     public FormTambahSesi() {
         initComponents();
+        lIdSesi.setVisible(false);
     }
 
-    public int genID() {
+    // rbSesi
+    public void roleButtonSesi(String role){
+        if (role.equals("simpan")){
+            bSimpanSesi.setEnabled(true);
+            bUbahSesi.setEnabled(false);
+            bHapusSesi.setEnabled(false);
+            lJudulSesi.setText("SESI BARU");
+            this.setTitle("Tambah Sesi Baru");
+        }else if (role.equals("ubahhapus")){
+            dcTanggalMulai.setEnabled(false);
+            tLamaSesi.setEnabled(false);
+            cbNarasumberSesi.setEnabled(false);
+            cbMateriSesi.setEnabled(false);
+            bCekRuangan.setEnabled(false);
+            tbCekRuangan.setEnabled(false);
+            bSimpanSesi.setEnabled(false);
+            bUbahSesi.setEnabled(true);
+            bHapusSesi.setEnabled(true);
+            lJudulSesi.setText("UBAH/HAPUS SESI");
+            this.setTitle("Ubah/Hapus Sesi");
+        }
+    }
+    
+    // giSesi
+    public int genIdSesi() {
         Random r = new Random(System.currentTimeMillis());
         int number = 1000;
         for(int counter=1; counter<=1;counter++){
@@ -40,6 +66,31 @@ public class FormTambahSesi extends javax.swing.JFrame {
         return number;
     }
     
+    // gtfSesi
+    public void getTextFieldSesi(String id) throws ParseException{
+        String SQL = "SELECT id_sesi, (SELECT nama_narasumber FROM tb_narasumber n WHERE n.id_narasumber = s.id_narasumber) AS nama_narasumber, (SELECT nama_materi FROM tb_materi m WHERE m.id_materi = s.id_materi) AS nama_materi, (SELECT nama_ruangan FROM tb_ruangan r WHERE r.id_ruangan = s.id_ruangan) AS nama_ruangan, tema, tanggal_mulai, tanggal_selesai, kuota FROM tb_sesi s WHERE s.id_sesi = '"+id+"'";
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            if(rs.next()) {
+                lIdSesi.setText(rs.getString(1));
+                cbNarasumberSesi.setSelectedItem(rs.getString(2));
+                cbMateriSesi.setSelectedItem(rs.getString(3));
+                tTemaSesi.setText(rs.getString(5));
+                Date tanggalMulai = sdf.parse(rs.getString(6));
+                dcTanggalMulai.setDate(tanggalMulai);
+                Date tanggalSelesai = sdf.parse(rs.getString(7));
+                long selisih = tanggalSelesai.getTime() - tanggalMulai.getTime();
+                int day = (int) ((selisih / (24 * 60 * 60 * 1000))+1);
+                tLamaSesi.setText(String.valueOf(day));
+                tKuotaSesi.setText(rs.getString(8));
+            }
+            System.out.println("getTextFieldSesi() berhasil...");
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    // gcNarasumber
     public void getComboNarasumber(){
         String SQL = "SELECT nama_narasumber FROM tb_narasumber";
         ResultSet rs = Koneksi.executeQuery(SQL);
@@ -54,21 +105,23 @@ public class FormTambahSesi extends javax.swing.JFrame {
         }
     }
     
+    // gcMateri
     public void getComboMateri(){
         String SQL = "SELECT m.nama_materi FROM tb_materi m JOIN tb_narasumber_materi nm ON nm.id_materi = m.id_materi WHERE nm.id_narasumber = (SELECT id_narasumber FROM tb_narasumber WHERE nama_narasumber = '"+cbNarasumberSesi.getSelectedItem()+"')";
         ResultSet rs = Koneksi.executeQuery(SQL);
         cbMateriSesi.removeAllItems();
-            try {
-                while(rs.next()) {
-                    cbMateriSesi.addItem(rs.getString(1));
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(FormTambahSesi.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            while(rs.next()) {
+                cbMateriSesi.addItem(rs.getString(1));
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormTambahSesi.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
+    // gdRuangan
     public void getDataRuangan(){
-        String kolom[] = {"ID","Nama Ruangan","Kapasitas","Status"};
+        String kolom[] = {"ID","Nama Ruangan","Kapasitas"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
         String SQL = "SELECT * FROM tb_ruangan";
         ResultSet rs = Koneksi.executeQuery(SQL);
@@ -86,6 +139,7 @@ public class FormTambahSesi extends javax.swing.JFrame {
         tbCekRuangan.setModel(dtm);
     }
     
+    // gsSesi
     public void getSimpanSesi(){
         int baris = tbCekRuangan.getSelectedRow();
         //***************************************************
@@ -99,7 +153,7 @@ public class FormTambahSesi extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
         } else {
             String SQL = "INSERT INTO tb_sesi (id_sesi, id_narasumber, id_materi, id_ruangan, tema,  tanggal_mulai, tanggal_selesai, kuota) VALUES ("
-                    + "'SESI-2018"+genID()+"',"
+                    + "'SESI-2018"+genIdSesi()+"',"
                     + "(SELECT id_narasumber FROM tb_narasumber WHERE nama_narasumber = '"+cbNarasumberSesi.getSelectedItem()+"'),"
                     + "(SELECT id_materi FROM tb_materi WHERE nama_materi = '"+cbMateriSesi.getSelectedItem()+"'),"
                     + "'"+tbCekRuangan.getValueAt(baris, 0).toString()+"',"
@@ -120,8 +174,46 @@ public class FormTambahSesi extends javax.swing.JFrame {
         }
     }
     
+    // guSesi
+    public void getUbahSesi(){
+        if ("".equals(tTemaSesi.getText()) || "".equals(tKuotaSesi.getText()) ) {
+            JOptionPane.showMessageDialog(this, "Harap lengkapi data !", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        } else {
+            String SQL = "UPDATE tb_sesi SET "
+                    + "tema = '"+tTemaSesi.getText()+"',"
+                    + "kuota = '"+tKuotaSesi.getText()+"' "
+                    + "WHERE id_sesi='"+lIdSesi.getText()+"'";
+            int status = Koneksi.execute(SQL);
+            if (status == 1) {
+                JOptionPane.showMessageDialog(this, "Sesi berhasil diubah", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getUbahSesi() berhasil...");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Sesi gagal diubah", "Gagal", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    // ghSesi
+    public void getHapusSesi(){
+        int reply = JOptionPane.showConfirmDialog(this, "Apakah anda yakin akan menghapus data Sesi dengan Tema '"+tTemaSesi.getText()+"'", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+            String SQL = "DELETE FROM tb_sesi WHERE id_sesi = '"+lIdSesi.getText()+"'";
+            int status = Koneksi.execute(SQL);
+            if (status == 1) {
+                JOptionPane.showMessageDialog(this, "Sesi dengan Tema '"+tTemaSesi.getText()+"' berhasil dihapus", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getHapusSesi() berhasil...");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Sesi dengan Tema '"+tTemaSesi.getText()+"' gagal dihapus", "Gagal", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Hmmm.!!! -___-");
+        }
+    }
+    
+    // gCekRuangan
     public void getCekRuangan(){
-        
         int lama = Integer.parseInt(tLamaSesi.getText()) - 1;
         Calendar c = Calendar.getInstance();
         c.setTime(dcTanggalMulai.getDate());
@@ -156,7 +248,7 @@ public class FormTambahSesi extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
+        lJudulSesi = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -171,15 +263,18 @@ public class FormTambahSesi extends javax.swing.JFrame {
         cbNarasumberSesi = new javax.swing.JComboBox<>();
         dcTanggalMulai = new com.toedter.calendar.JDateChooser();
         jSeparator2 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbCekRuangan = new javax.swing.JTable();
         jSeparator4 = new javax.swing.JSeparator();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        bCekRuangan = new javax.swing.JButton();
         tLamaSesi = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        bUbahSesi = new javax.swing.JButton();
+        bSimpanSesi = new javax.swing.JButton();
+        bHapusSesi = new javax.swing.JButton();
+        lIdSesi = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -191,9 +286,9 @@ public class FormTambahSesi extends javax.swing.JFrame {
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel8.setText("SESI BARU");
-        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
+        lJudulSesi.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lJudulSesi.setText("JUDUL");
+        jPanel3.add(lJudulSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 430, 70));
 
@@ -235,14 +330,6 @@ public class FormTambahSesi extends javax.swing.JFrame {
         jPanel1.add(dcTanggalMulai, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 40, 120, -1));
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 70, 320, 10));
 
-        jButton1.setText("Simpan Sesi");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 390, 120, 20));
-
         jLabel11.setText("Kuota");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 80, -1, -1));
 
@@ -262,42 +349,79 @@ public class FormTambahSesi extends javax.swing.JFrame {
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 410, 210));
         jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 160, 10));
 
-        jButton2.setText("Cek Ruangan");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        bCekRuangan.setText("Cek Ruangan");
+        bCekRuangan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                bCekRuanganActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 140, 120, 20));
-
-        jButton3.setText("Cek Penggunaan");
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 390, 120, 20));
+        jPanel1.add(bCekRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 140, 120, 20));
         jPanel1.add(tLamaSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 40, 80, -1));
 
         jLabel12.setText("Hari");
         jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 40, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 430, 420));
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        setSize(new java.awt.Dimension(446, 531));
+        bUbahSesi.setText("Ubah");
+        bUbahSesi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bUbahSesiActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bUbahSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 120, 20));
+
+        bSimpanSesi.setText("Simpan");
+        bSimpanSesi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bSimpanSesiActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bSimpanSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, 120, 20));
+
+        bHapusSesi.setText("Hapus");
+        bHapusSesi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bHapusSesiActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bHapusSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, 130, 20));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 410, 40));
+
+        lIdSesi.setText("id_sesi");
+        jPanel1.add(lIdSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 110, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 430, 440));
+
+        setSize(new java.awt.Dimension(446, 549));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        getComboNarasumber();
+        //getComboNarasumber();
     }//GEN-LAST:event_formWindowActivated
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void bSimpanSesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSimpanSesiActionPerformed
         getSimpanSesi();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_bSimpanSesiActionPerformed
 
     private void cbNarasumberSesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbNarasumberSesiActionPerformed
         getComboMateri();
     }//GEN-LAST:event_cbNarasumberSesiActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void bCekRuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCekRuanganActionPerformed
         getCekRuangan();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_bCekRuanganActionPerformed
+
+    private void bUbahSesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahSesiActionPerformed
+        getUbahSesi();
+    }//GEN-LAST:event_bUbahSesiActionPerformed
+
+    private void bHapusSesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusSesiActionPerformed
+        getHapusSesi();
+    }//GEN-LAST:event_bHapusSesiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -335,12 +459,13 @@ public class FormTambahSesi extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bCekRuangan;
+    private javax.swing.JButton bHapusSesi;
+    private javax.swing.JButton bSimpanSesi;
+    private javax.swing.JButton bUbahSesi;
     private javax.swing.JComboBox<String> cbMateriSesi;
     private javax.swing.JComboBox<String> cbNarasumberSesi;
     private com.toedter.calendar.JDateChooser dcTanggalMulai;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -349,13 +474,15 @@ public class FormTambahSesi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JLabel lIdSesi;
+    private javax.swing.JLabel lJudulSesi;
     private javax.swing.JTextField tKuotaSesi;
     private javax.swing.JTextField tLamaSesi;
     private javax.swing.JTextField tTemaSesi;

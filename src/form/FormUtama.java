@@ -5,14 +5,20 @@
  */
 package form;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import workshopapp.Koneksi;
 
@@ -21,7 +27,7 @@ import workshopapp.Koneksi;
  * @author Sultan
  */
 public class FormUtama extends javax.swing.JFrame {
-
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     
     /**
      * Creates new form FormUtama
@@ -29,11 +35,76 @@ public class FormUtama extends javax.swing.JFrame {
     public FormUtama() {
         initComponents();
         setJam();
+        getWarnaTabelSesi();
     }
+    
+    // gwtSesi
+    public void getWarnaTabelSesi(){
+        tbSesi.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 
+                try {
+                    Date tglMulai = sdf.parse((String)table.getModel().getValueAt(row, 5));
+                    Date tglSelesai = sdf.parse((String)table.getModel().getValueAt(row, 6));
+                    String x = sdf.format(new Date());
+                    Date sekarang = sdf.parse(x);
+                    if (tglMulai.compareTo(sekarang) > 0) {
+                        if(tglSelesai.compareTo(sekarang) > 0){
+                            tbSesi.setSelectionBackground(Color.LIGHT_GRAY);
+                            setForeground(Color.BLUE);
+                        }else if(tglSelesai.compareTo(sekarang) < 0){
+                            tbSesi.setSelectionBackground(Color.LIGHT_GRAY);
+                            setForeground(new Color(0,138,0));
+                        }else if(tglSelesai.compareTo(sekarang) == 0){
+                            tbSesi.setSelectionBackground(Color.LIGHT_GRAY);
+                            setForeground(new Color(0,138,0));
+                        }else{
+                            setForeground(Color.BLACK);
+                        }
+                    } else if (tglMulai.compareTo(sekarang) < 0) {
+                        if(tglSelesai.compareTo(sekarang) > 0){
+                            tbSesi.setSelectionBackground(Color.LIGHT_GRAY);
+                            setForeground(new Color(0,138,0));
+                        }else if(tglSelesai.compareTo(sekarang) < 0){
+                            tbSesi.setSelectionBackground(Color.LIGHT_GRAY);
+                            setForeground(Color.RED);
+                        }else if(tglSelesai.compareTo(sekarang) == 0){
+                            tbSesi.setSelectionBackground(Color.LIGHT_GRAY);
+                            setForeground(new Color(0,138,0));
+                        }else{
+                            setForeground(Color.BLACK);
+                        }
+                    } else if (tglMulai.compareTo(sekarang) == 0) {
+                        if(tglSelesai.compareTo(sekarang) > 0){
+                            tbSesi.setSelectionBackground(Color.LIGHT_GRAY);
+                            setForeground(new Color(0,138,0));
+                        }else if(tglSelesai.compareTo(sekarang) < 0){
+                            tbSesi.setSelectionBackground(Color.LIGHT_GRAY);
+                            setForeground(new Color(0,138,0));
+                        }else if(tglSelesai.compareTo(sekarang) == 0){
+                            tbSesi.setSelectionBackground(Color.LIGHT_GRAY);
+                            setForeground(new Color(0,138,0));
+                        }else{
+                            setForeground(Color.BLACK);
+                        }
+                        tbSesi.setSelectionBackground(Color.LIGHT_GRAY);
+                        setForeground(new Color(0,138,0));
+                    } else {
+                        setForeground(Color.BLACK);
+                    }
+                } catch (ParseException ex) {
+                    Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return this;
+            }   
+        });
+    }
+    
+    // setJam
     public final void setJam(){
         ActionListener taskPerformer = new ActionListener() {
-
             public void actionPerformed(ActionEvent evt) {
                 String nol_jam = "", nol_menit = "",nol_detik = "";
 
@@ -56,44 +127,169 @@ public class FormUtama extends javax.swing.JFrame {
         new Timer(1000, taskPerformer).start();
     }
     
-    public void getResetTabel(){
-        String kolom[] = {"ID","Materi"};
+    // gdSesi
+    public void getDataSesi(){
+        String kolom[] = {"ID","Narasumber","Materi","Ruangan","Tema","Mulai","Selesai" ,"Kuota"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-        String data[] = {null, null};
-        dtm.addRow(data);
-        tbMateriNarasumber.setModel(dtm);
+        String SQL = "SELECT id_sesi, (SELECT nama_narasumber FROM tb_narasumber n WHERE n.id_narasumber = s.id_narasumber) AS nama_narasumber, (SELECT nama_materi FROM tb_materi m WHERE m.id_materi = s.id_materi) AS nama_materi, (SELECT nama_ruangan FROM tb_ruangan r WHERE r.id_ruangan = s.id_ruangan) AS nama_ruangan, tema, tanggal_mulai, tanggal_selesai, kuota FROM tb_sesi s ORDER BY tanggal_mulai DESC";
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNamaNarasumber = rs.getString(2);
+                String kolMateri = rs.getString(3);
+                String kolRuangan = rs.getString(4);
+                String koltema = rs.getString(5);
+                String kolTanggalMulai = rs.getString(6);
+                String kolTanggalSelesai = rs.getString(7);
+                String kolKuota = rs.getString(8);
+                String data[] = {kolID,kolNamaNarasumber,kolMateri,kolRuangan,koltema,kolTanggalMulai,kolTanggalSelesai,kolKuota};
+                dtm.addRow(data);
+            }
+            System.out.println("getDataSesi() berhasil...");
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbSesi.setModel(dtm);
+        getResetTabelPesertaSesi();
     }
     
+    // gcSesi
+    public void getCariSesi(){
+        String kolom[] = {"ID","Narasumber","Materi","Ruangan","Tema","Mulai","Selesai"  ,"Kuota"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "";
+        if(rbCariByIDSesi.isSelected()){
+            SQL = "SELECT id_sesi, (SELECT nama_narasumber FROM tb_narasumber n WHERE n.id_narasumber = s.id_narasumber) AS nama_narasumber, (SELECT nama_materi FROM tb_materi m WHERE m.id_materi = s.id_materi) AS nama_materi, (SELECT nama_ruangan FROM tb_ruangan r WHERE r.id_ruangan = s.id_ruangan) AS nama_ruangan, tema, tanggal_mulai, tanggal_selesai, kuota FROM tb_sesi s WHERE s.id_sesi like '%"+tCariSesi.getText()+"%' ORDER BY s.tanggal_mulai DESC";
+        }else if(rbCariByTemaSesi.isSelected()){
+            SQL = "SELECT id_sesi, (SELECT nama_narasumber FROM tb_narasumber n WHERE n.id_narasumber = s.id_narasumber) AS nama_narasumber, (SELECT nama_materi FROM tb_materi m WHERE m.id_materi = s.id_materi) AS nama_materi, (SELECT nama_ruangan FROM tb_ruangan r WHERE r.id_ruangan = s.id_ruangan) AS nama_ruangan, tema, tanggal_mulai, tanggal_selesai, kuota FROM tb_sesi s WHERE s.tema like '%"+tCariSesi.getText()+"%' ORDER BY s.tanggal_mulai DESC";
+        }
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNamaNarasumber = rs.getString(2);
+                String kolMateri = rs.getString(3);
+                String kolRuangan = rs.getString(4);
+                String koltema = rs.getString(5);
+                String kolTanggalMulai = rs.getString(6);
+                String kolTanggalSelesai = rs.getString(7);
+                String kolKuota = rs.getString(8);
+                String data[] = {kolID,kolNamaNarasumber,kolMateri,kolRuangan,koltema,kolTanggalMulai,kolTanggalSelesai,kolKuota};
+                dtm.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbSesi.setModel(dtm);
+        bUbahHapusSesi.setEnabled(false);
+        getResetTabelPesertaSesi();
+    }
+    
+    // grtPesertaSesi
+    public void getResetTabelPesertaSesi(){
+        String kolom[] = {"ID Daftar","ID Peserta","Nama Peserta"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String data[] = {null};
+        dtm.addRow(data);
+        tbPesertaSesi.setModel(dtm);
+        lJumlahPeserta.setText("0");
+    }
+    
+    // gdPesertaSesi
+    public void getDataPesertaSesi(){
+        int baris = tbSesi.getSelectedRow();
+        if (baris != -1) {
+            String idSesi = tbSesi.getValueAt(baris, 0).toString();
+            String kolom[] = {"ID Daftar","ID Peserta","Nama Peserta"};
+            DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+            String SQL = "SELECT id_daftar, id_peserta, (SELECT nama_peserta FROM peserta p WHERE p.id_peserta = s.id_peserta) AS nama_peserta FROM tb_peserta_sesi s WHERE id_sesi = '"+idSesi+"'";
+            String SQLCount = "SELECT count(*) FROM tb_peserta_sesi WHERE id_sesi = '"+idSesi+"'";
+            ResultSet rs = Koneksi.executeQuery(SQL);
+            try {
+                while(rs.next()) {
+                    String kolIdDaftar = rs.getString(1);
+                    String kolIdPeserta = rs.getString(2);
+                    String kolNamaPeserta = rs.getString(3);
+                    String data[] = {kolIdDaftar,kolIdPeserta,kolNamaPeserta};
+                    dtm.addRow(data);
+                }
+                System.out.println("getDataPesertaSesi() berhasil...");
+            } catch (SQLException ex) {
+                Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ResultSet rs2 = Koneksi.executeQuery(SQLCount);
+            try {
+                if(rs2.next()){
+                    lJumlahPeserta.setText(rs2.getString(1));
+                }
+                System.out.println("getDataPesertaSesiCount() berhasil...");
+            } catch (SQLException ex) {
+                Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            tbPesertaSesi.setModel(dtm);
+        }
+    }
+    
+    // gdRuangan
+    public void getDataRuangan(){
+        String kolom[] = {"ID","Nama Ruangan","Kapasitas"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "SELECT * FROM tb_ruangan";
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNamaMateri = rs.getString(2);
+                String kolKapasitas = rs.getString(3);
+                String data[] = {kolID, kolNamaMateri, kolKapasitas};
+                dtm.addRow(data);
+            }
+            System.out.println("getDataRuangan() berhasil...");
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbRuangan.setModel(dtm);
+        getResetTabelRiwayat();
+    }
+    
+    // gcRuangan
+    public void getCariRuangan(){
+        String kolom[] = {"ID","Nama Ruangan","Kapasitas"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "";
+        if(rbCariByIDRuangan.isSelected()){
+            SQL = "SELECT * FROM tb_ruangan WHERE id_ruangan like '%"+tCariRuangan.getText()+"%'";
+        }else if(rbCariByNamaRuangan.isSelected()){
+            SQL = "SELECT * FROM tb_ruangan WHERE nama_ruangan like '%"+tCariRuangan.getText()+"%'";
+        }
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNama = rs.getString(2);
+                String kolKapasitas = rs.getString(3);
+                String data[] = {kolID, kolNama, kolKapasitas};
+                dtm.addRow(data);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbRuangan.setModel(dtm);
+        bUbahHapusRuangan.setEnabled(false);
+        getResetTabelRiwayat();
+    }
+    
+    // grtRiwayat
     public void getResetTabelRiwayat(){
         String kolom[] = {"ID","Nama Narasumber","Nama Materi","Tema","Tanggal Mulai","Tanggal Selesai"  ,"Kuota"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-        String data[] = {null, null};
+        String data[] = {null};
         dtm.addRow(data);
         tbRiwayatRuangan.setModel(dtm);
     }
     
-    public void getDataMateriDilatih(){
-        int baris = tbNarasumber.getSelectedRow();
-        if (baris != -1) {
-            String idNarasumber = tbNarasumber.getValueAt(baris, 0).toString();
-            String kolom[] = {"ID","Materi"};
-            DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-            String SQL = "SELECT m.id_materi, m.nama_materi FROM tb_materi m JOIN tb_narasumber_materi nm ON nm.id_materi = m.id_materi WHERE nm.id_narasumber = '"+idNarasumber+"'";
-            ResultSet rs = Koneksi.executeQuery(SQL);
-            try {
-                while(rs.next()) {
-                    String kolID = rs.getString(1);
-                    String kolMateri = rs.getString(2);
-                    String data[] = {kolID, kolMateri};
-                    dtm.addRow(data);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            tbMateriNarasumber.setModel(dtm);
-        }
-    }
-    
+    // gdrRuangan
     public void getDataRiwayatRuangan(){
         int baris = tbRuangan.getSelectedRow();
         if (baris != -1) {
@@ -114,6 +310,7 @@ public class FormUtama extends javax.swing.JFrame {
                     String data[] = {kolID,kolNamaNarasumber,kolMateri,koltema,kolTanggalMulai,kolTanggalSelesai,kolKuota};
                     dtm.addRow(data);
                 }
+                System.out.println("getDataRiwayatRuangan() berhasil...");
             } catch (SQLException ex) {
                 Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -121,6 +318,7 @@ public class FormUtama extends javax.swing.JFrame {
         }
     }
     
+    // gdPeserta
     public void getDataPeserta(){
         String kolom[] = {"ID","Nama","Telepon","Email", "Alamat"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
@@ -136,133 +334,14 @@ public class FormUtama extends javax.swing.JFrame {
                 String data[] = {kolID, kolNama, kolTelp, kolEmail, kolAlamat};
                 dtm.addRow(data);
             }
+            System.out.println("getDataPeserta() berhasil...");
         } catch (SQLException ex) {
             Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
         }
         tbPeserta.setModel(dtm);
-        bUbahHapusPeserta.setEnabled(false);
     }
     
-    public void getDataNarasumber(){
-        String kolom[] = {"ID","Nama","Telepon","Email"};
-        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-        String SQL = "SELECT * FROM tb_narasumber";
-        ResultSet rs = Koneksi.executeQuery(SQL);
-        try {
-            while(rs.next()) {
-                String kolID = rs.getString(1);
-                String kolNama = rs.getString(2);
-                String kolTelp = rs.getString(3);
-                String kolEmail = rs.getString(4);
-                String data[] = {kolID, kolNama, kolTelp, kolEmail};
-                dtm.addRow(data);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        tbNarasumber.setModel(dtm);
-        bUbahHapusNarasumber.setEnabled(false);
-    }
-    
-    public void getDataMateri(){
-        String kolom[] = {"ID","Nama Materi"};
-        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-        String SQL = "SELECT * FROM tb_materi";
-        ResultSet rs = Koneksi.executeQuery(SQL);
-        try {
-            while(rs.next()) {
-                String kolID = rs.getString(1);
-                String kolNamaMateri = rs.getString(2);
-                String data[] = {kolID, kolNamaMateri};
-                dtm.addRow(data);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        tbMateri.setModel(dtm);
-        bUbahHapusMateri.setEnabled(false);
-    }
-    
-    public void getDataRuangan(){
-        String kolom[] = {"ID","Nama Ruangan","Kapasitas"};
-        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-        String SQL = "SELECT * FROM tb_ruangan";
-        ResultSet rs = Koneksi.executeQuery(SQL);
-        try {
-            while(rs.next()) {
-                String kolID = rs.getString(1);
-                String kolNamaMateri = rs.getString(2);
-                String kolKapasitas = rs.getString(3);
-                String data[] = {kolID, kolNamaMateri, kolKapasitas};
-                dtm.addRow(data);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        tbRuangan.setModel(dtm);
-        bUbahHapusRuangan.setEnabled(false);
-    }
-    
-    public void getDataSesi(){
-        String kolom[] = {"ID","Nama Narasumber","Nama Materi","Nama Ruangan","Tema","Tanggal Mulai","Tanggal Selesai"  ,"Kuota"};
-        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-        String SQL = "SELECT id_sesi, (SELECT nama_narasumber FROM tb_narasumber n WHERE n.id_narasumber = s.id_narasumber) AS nama_narasumber, (SELECT nama_materi FROM tb_materi m WHERE m.id_materi = s.id_materi) AS nama_materi, (SELECT nama_ruangan FROM tb_ruangan r WHERE r.id_ruangan = s.id_ruangan) AS nama_ruangan, tema, tanggal_mulai, tanggal_selesai, kuota FROM tb_sesi s";
-        ResultSet rs = Koneksi.executeQuery(SQL);
-        try {
-            while(rs.next()) {
-                String kolID = rs.getString(1);
-                String kolNamaNarasumber = rs.getString(2);
-                String kolMateri = rs.getString(3);
-                String kolRuangan = rs.getString(4);
-                String koltema = rs.getString(5);
-                String kolTanggalMulai = rs.getString(6);
-                String kolTanggalSelesai = rs.getString(7);
-                String kolKuota = rs.getString(8);
-                String data[] = {kolID,kolNamaNarasumber,kolMateri,kolRuangan,koltema,kolTanggalMulai,kolTanggalSelesai,kolKuota};
-                dtm.addRow(data);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        tbSesi.setModel(dtm);
-        bUbahHapusSesi.setEnabled(false);
-        bPendaftaran.setEnabled(false);
-    }
-    
-    public void getDataPesertaSesi(){
-        int baris = tbSesi.getSelectedRow();
-        if (baris != -1) {
-            String idSesi = tbSesi.getValueAt(baris, 0).toString();
-            String kuotaSesi = tbSesi.getValueAt(baris, 7).toString();
-            String kolom[] = {"ID Daftar","ID Peserta","Nama Peserta"};
-            DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-            String SQL = "SELECT id_daftar, id_peserta, (SELECT nama_peserta FROM peserta p WHERE p.id_peserta = s.id_peserta) AS nama_peserta FROM tb_peserta_sesi s WHERE id_sesi = '"+idSesi+"'";
-            String SQLCount = "SELECT count(*) FROM tb_peserta_sesi WHERE id_sesi = '"+idSesi+"'";
-            ResultSet rs = Koneksi.executeQuery(SQL);
-            ResultSet rs2 = Koneksi.executeQuery(SQLCount);
-            try {
-                while(rs.next()) {
-                    String kolIdDaftar = rs.getString(1);
-                    String kolIdPeserta = rs.getString(2);
-                    String kolNamaPeserta = rs.getString(3);
-                    String data[] = {kolIdDaftar,kolIdPeserta,kolNamaPeserta};
-                    dtm.addRow(data);
-                }
-                if(rs2.next()){
-                    int pesertaIkut = Integer.valueOf(rs2.getString(1));
-                    lJumlahPeserta.setText(rs2.getString(1));
-                    if (pesertaIkut >= Integer.valueOf(kuotaSesi)){
-                        bPendaftaran.setEnabled(false);
-                        JOptionPane.showMessageDialog(this, "Maaf, Sesi Pelatihan ini Penuh", "Penuh", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            tbPesertaSesi.setModel(dtm);
-        }
-    }
-    
+    // gcPeserta
     public void getCariPeserta(){
         String kolom[] = {"ID","Nama","Telepon","Email", "Alamat"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
@@ -273,8 +352,8 @@ public class FormUtama extends javax.swing.JFrame {
             SQL = "SELECT id_peserta, nama_peserta, no_telp, email, alamat FROM peserta WHERE nama_peserta like '%"+tCariPeserta.getText()+"%'";
         }
         ResultSet rs = Koneksi.executeQuery(SQL);
-        try {
-            while(rs.next()) {
+        try{
+            while(rs.next()){
                 String kolID = rs.getString(1);
                 String kolNama = rs.getString(2);
                 String kolTelp = rs.getString(3);
@@ -290,6 +369,30 @@ public class FormUtama extends javax.swing.JFrame {
         bUbahHapusPeserta.setEnabled(false);
     }
     
+    // gdNarasumber
+    public void getDataNarasumber(){
+        String kolom[] = {"ID","Nama","Telepon","Email"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "SELECT * FROM tb_narasumber";
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try {
+            while(rs.next()) {
+                String kolID = rs.getString(1);
+                String kolNama = rs.getString(2);
+                String kolTelp = rs.getString(3);
+                String kolEmail = rs.getString(4);
+                String data[] = {kolID, kolNama, kolTelp, kolEmail};
+                dtm.addRow(data);
+            }
+            System.out.println("getDataNarasumber() berhasil...");
+        } catch (SQLException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbNarasumber.setModel(dtm);
+        getResetTabelNarasumber();
+    }
+    
+    // gcNarasumber
     public void getCariNarasumber(){
         String kolom[] = {"ID","Nama","Telepon","Email"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
@@ -314,10 +417,65 @@ public class FormUtama extends javax.swing.JFrame {
         }
         tbNarasumber.setModel(dtm);
         bUbahHapusNarasumber.setEnabled(false);
+        getResetTabelNarasumber();
     }
     
+    // grtNarasumber
+    public void getResetTabelNarasumber(){
+        String kolom[] = {"ID","Materi"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String data[] = {null};
+        dtm.addRow(data);
+        tbMateriNarasumber.setModel(dtm);
+    }
+    
+    // gdmDilatih
+    public void getDataMateriDilatih(){
+        int baris = tbNarasumber.getSelectedRow();
+        if (baris != -1) {
+            String idNarasumber = tbNarasumber.getValueAt(baris, 0).toString();
+            String kolom[] = {"ID","Materi"};
+            DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+            String SQL = "SELECT m.id_materi, m.nama_materi FROM tb_materi m JOIN tb_narasumber_materi nm ON nm.id_materi = m.id_materi WHERE nm.id_narasumber = '"+idNarasumber+"'";
+            ResultSet rs = Koneksi.executeQuery(SQL);
+            try {
+                while(rs.next()) {
+                    String kolID = rs.getString(1);
+                    String kolMateri = rs.getString(2);
+                    String data[] = {kolID, kolMateri};
+                    dtm.addRow(data);
+                }
+                System.out.println("getDataMateriDilatih() berhasil...");
+            } catch (SQLException ex) {
+                Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            tbMateriNarasumber.setModel(dtm);
+        }
+    }
+    
+    // gdMateri
+    public void getDataMateri(){
+        String kolom[] = {"ID","Materi"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        String SQL = "SELECT * FROM tb_materi";
+        ResultSet rs = Koneksi.executeQuery(SQL);
+        try{
+            while(rs.next()){
+                String kolID = rs.getString(1);
+                String kolNamaMateri = rs.getString(2);
+                String data[] = {kolID, kolNamaMateri};
+                dtm.addRow(data);
+            }
+            System.out.println("getDataMateri() berhasil...");
+        }catch(SQLException ex){
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tbMateri.setModel(dtm);
+    }
+    
+    // gcMateri
     public void getCariMateri(){
-        String kolom[] = {"ID","Nama Materi"};
+        String kolom[] = {"ID","Materi"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
         String SQL = "";
         if(rbCariByIDMateri.isSelected()){
@@ -326,43 +484,18 @@ public class FormUtama extends javax.swing.JFrame {
             SQL = "SELECT * FROM tb_materi WHERE nama_materi like '%"+tCariMateri.getText()+"%'";
         }
         ResultSet rs = Koneksi.executeQuery(SQL);
-        try {
-            while(rs.next()) {
+        try{
+            while(rs.next()){
                 String kolID = rs.getString(1);
                 String kolNamaMateri = rs.getString(2);
                 String data[] = {kolID, kolNamaMateri};
                 dtm.addRow(data);
             }
-        } catch (SQLException ex) {
+        }catch(SQLException ex){
             Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
         }
         tbMateri.setModel(dtm);
         bUbahHapusMateri.setEnabled(false);
-    }
-    
-    public void getCariRuangan(){
-        String kolom[] = {"ID","Nama Ruangan","Kapasitas"};
-        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
-        String SQL = "";
-        if(rbCariByIDRuangan.isSelected()){
-            SQL = "SELECT * FROM tb_ruangan WHERE id_ruangan like '%"+tCariRuangan.getText()+"%'";
-        }else if(rbCariByNamaRuangan.isSelected()){
-            SQL = "SELECT * FROM tb_ruangan WHERE nama_ruangan like '%"+tCariRuangan.getText()+"%'";
-        }
-        ResultSet rs = Koneksi.executeQuery(SQL);
-        try {
-            while(rs.next()) {
-                String kolID = rs.getString(1);
-                String kolNama = rs.getString(2);
-                String kolKapasitas = rs.getString(3);
-                String data[] = {kolID, kolNama, kolKapasitas};
-                dtm.addRow(data);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        tbRuangan.setModel(dtm);
-        bUbahHapusRuangan.setEnabled(false);
     }
     
     /**
@@ -378,6 +511,7 @@ public class FormUtama extends javax.swing.JFrame {
         bgCariNarasumber = new javax.swing.ButtonGroup();
         bgCariMateri = new javax.swing.ButtonGroup();
         bgCariRuangan = new javax.swing.ButtonGroup();
+        bgCariSesi = new javax.swing.ButtonGroup();
         pDasar = new javax.swing.JPanel();
         pJudulProgram = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -388,10 +522,10 @@ public class FormUtama extends javax.swing.JFrame {
         tbSesi = new javax.swing.JTable();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        jButton13 = new javax.swing.JButton();
+        bTambahSesi = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel17 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        tCariSesi = new javax.swing.JTextField();
         bPendaftaran = new javax.swing.JButton();
         bUbahHapusSesi = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
@@ -399,7 +533,8 @@ public class FormUtama extends javax.swing.JFrame {
         lJumlahPeserta = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jButton16 = new javax.swing.JButton();
+        rbCariByIDSesi = new javax.swing.JRadioButton();
+        rbCariByTemaSesi = new javax.swing.JRadioButton();
         pRuangan = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -489,7 +624,7 @@ public class FormUtama extends javax.swing.JFrame {
         jLabel5.setText("JUDUL PROGRAM");
         pJudulProgram.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
 
-        pDasar.add(pJudulProgram, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 780, 60));
+        pDasar.add(pJudulProgram, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 780, -1));
 
         tpMenuUtama.setBackground(new java.awt.Color(255, 255, 255));
         tpMenuUtama.setEnabled(false);
@@ -526,21 +661,26 @@ public class FormUtama extends javax.swing.JFrame {
         jLabel16.setText("Tambah Sesi Baru");
         jPanel13.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 10, -1, 20));
 
-        jButton13.setText("+");
-        jButton13.addActionListener(new java.awt.event.ActionListener() {
+        bTambahSesi.setText("+");
+        bTambahSesi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton13ActionPerformed(evt);
+                bTambahSesiActionPerformed(evt);
             }
         });
-        jPanel13.add(jButton13, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 50, 20));
+        jPanel13.add(bTambahSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 50, 20));
         jPanel13.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 750, 10));
 
         jLabel17.setText("Cari Sesi");
         jPanel13.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, -1, 20));
-        jPanel13.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 260, -1));
+
+        tCariSesi.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                tCariSesiCaretUpdate(evt);
+            }
+        });
+        jPanel13.add(tCariSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 230, -1));
 
         bPendaftaran.setText("Pendaftaran");
-        bPendaftaran.setEnabled(false);
         bPendaftaran.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bPendaftaranActionPerformed(evt);
@@ -549,7 +689,11 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel13.add(bPendaftaran, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 240, 100, 20));
 
         bUbahHapusSesi.setText("Ubah / Hapus");
-        bUbahHapusSesi.setEnabled(false);
+        bUbahHapusSesi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bUbahHapusSesiActionPerformed(evt);
+            }
+        });
         jPanel13.add(bUbahHapusSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 240, -1, 20));
 
         tbPesertaSesi.setModel(new javax.swing.table.DefaultTableModel(
@@ -576,8 +720,16 @@ public class FormUtama extends javax.swing.JFrame {
         jLabel20.setText("Jumlah Peserta : ");
         jPanel13.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 280, -1, 20));
 
-        jButton16.setText("Cari");
-        jPanel13.add(jButton16, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 240, 80, 20));
+        rbCariByIDSesi.setBackground(new java.awt.Color(204, 204, 204));
+        bgCariSesi.add(rbCariByIDSesi);
+        rbCariByIDSesi.setSelected(true);
+        rbCariByIDSesi.setText("ID");
+        jPanel13.add(rbCariByIDSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 240, -1, -1));
+
+        rbCariByTemaSesi.setBackground(new java.awt.Color(204, 204, 204));
+        bgCariSesi.add(rbCariByTemaSesi);
+        rbCariByTemaSesi.setText("Tema");
+        jPanel13.add(rbCariByTemaSesi, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 240, -1, -1));
 
         pSesi.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 650, 480));
 
@@ -635,7 +787,6 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel10.add(tCariRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, 300, -1));
 
         bUbahHapusRuangan.setText("Ubah / Hapus");
-        bUbahHapusRuangan.setEnabled(false);
         bUbahHapusRuangan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bUbahHapusRuanganActionPerformed(evt);
@@ -663,7 +814,6 @@ public class FormUtama extends javax.swing.JFrame {
 
         rbCariByIDRuangan.setBackground(new java.awt.Color(204, 204, 204));
         bgCariRuangan.add(rbCariByIDRuangan);
-        rbCariByIDRuangan.setSelected(true);
         rbCariByIDRuangan.setText("ID");
         jPanel10.add(rbCariByIDRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 240, -1, -1));
 
@@ -728,7 +878,6 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel3.add(tCariPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 450, 300, -1));
 
         bUbahHapusPeserta.setText("Ubah / Hapus");
-        bUbahHapusPeserta.setEnabled(false);
         bUbahHapusPeserta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bUbahHapusPesertaActionPerformed(evt);
@@ -782,7 +931,6 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel9.add(tCariNarasumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 280, -1));
 
         bUbahHapusNarasumber.setText("Ubah / Hapus");
-        bUbahHapusNarasumber.setEnabled(false);
         bUbahHapusNarasumber.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bUbahHapusNarasumberActionPerformed(evt);
@@ -820,7 +968,7 @@ public class FormUtama extends javax.swing.JFrame {
         jScrollPane4.setViewportView(tbNarasumber);
 
         jPanel9.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 620, 190));
-        jPanel9.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 750, 10));
+        jPanel9.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 620, 10));
 
         tbMateriNarasumber.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -872,7 +1020,6 @@ public class FormUtama extends javax.swing.JFrame {
         jPanel11.add(tCariMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 450, 310, -1));
 
         bUbahHapusMateri.setText("Ubah / Hapus");
-        bUbahHapusMateri.setEnabled(false);
         bUbahHapusMateri.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bUbahHapusMateriActionPerformed(evt);
@@ -990,28 +1137,31 @@ public class FormUtama extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    // activeWindows
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        getDataPeserta();
-        getDataNarasumber();
-        getDataMateri();
-        getResetTabel();
-        getDataRuangan();
-        getDataSesi();
-        getResetTabelRiwayat();
+        getDataSesi(); bUbahHapusSesi.setEnabled(false); bPendaftaran.setEnabled(false); bPendaftaran.setText("Pendaftaran");
+        getDataRuangan(); bUbahHapusRuangan.setEnabled(false);
+        getDataPeserta(); bUbahHapusPeserta.setEnabled(false);
+        getDataNarasumber(); bUbahHapusNarasumber.setEnabled(false);
+        getDataMateri(); bUbahHapusMateri.setEnabled(false);
     }//GEN-LAST:event_formWindowActivated
 
     private void bTambahPesertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahPesertaActionPerformed
         FormTambahPeserta tp = new FormTambahPeserta();
         tp.setVisible(true);
-        tp.roleButton("simpan");
+        tp.roleButtonPeserta("simpan");
     }//GEN-LAST:event_bTambahPesertaActionPerformed
 
     private void bUbahHapusPesertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahHapusPesertaActionPerformed
         int baris = tbPeserta.getSelectedRow();
         FormTambahPeserta tp = new FormTambahPeserta();
         tp.setVisible(true);
-        tp.roleButton("ubahhapus");
-        tp.getTextField(tbPeserta.getValueAt(baris, 0).toString());
+        tp.roleButtonPeserta("ubahhapus");
+        try {
+            tp.getTextFieldPeserta(tbPeserta.getValueAt(baris, 0).toString());
+        } catch (ParseException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_bUbahHapusPesertaActionPerformed
 
     private void tbPesertaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPesertaMouseClicked
@@ -1028,20 +1178,19 @@ public class FormUtama extends javax.swing.JFrame {
     private void bTambahNarasumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahNarasumberActionPerformed
         FormTambahNarasumber tp = new FormTambahNarasumber();
         tp.setVisible(true);
-        tp.roleButton("simpan");
+        tp.roleButtonNarasumber("simpan");
     }//GEN-LAST:event_bTambahNarasumberActionPerformed
 
     private void tCariNarasumberCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tCariNarasumberCaretUpdate
         getCariNarasumber();
-        getResetTabel();
     }//GEN-LAST:event_tCariNarasumberCaretUpdate
 
     private void bUbahHapusNarasumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahHapusNarasumberActionPerformed
         int baris = tbNarasumber.getSelectedRow();
         FormTambahNarasumber tp = new FormTambahNarasumber();
         tp.setVisible(true);
-        tp.roleButton("ubahhapus");
-        tp.getTextField(tbNarasumber.getValueAt(baris, 0).toString());
+        tp.roleButtonNarasumber("ubahhapus");
+        tp.getTextFieldNarasumber(tbNarasumber.getValueAt(baris, 0).toString());
         tp.getDataMateriDilatih();
         tp.getDataMateriTersedia();
     }//GEN-LAST:event_bUbahHapusNarasumberActionPerformed
@@ -1057,7 +1206,7 @@ public class FormUtama extends javax.swing.JFrame {
     private void bTambahMateriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahMateriActionPerformed
         FormTambahMateri tm = new FormTambahMateri();
         tm.setVisible(true);
-        tm.roleButton("simpan");
+        tm.roleButtonMateri("simpan");
     }//GEN-LAST:event_bTambahMateriActionPerformed
 
     private void tCariMateriCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tCariMateriCaretUpdate
@@ -1068,8 +1217,8 @@ public class FormUtama extends javax.swing.JFrame {
         int baris = tbMateri.getSelectedRow();
         FormTambahMateri tm = new FormTambahMateri();
         tm.setVisible(true);
-        tm.roleButton("ubahhapus");
-        tm.getTextField(tbMateri.getValueAt(baris, 0).toString());
+        tm.roleButtonMateri("ubahhapus");
+        tm.getTextFieldMateri(tbMateri.getValueAt(baris, 0).toString());
     }//GEN-LAST:event_bUbahHapusMateriActionPerformed
 
     private void tbMateriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbMateriMouseClicked
@@ -1082,15 +1231,15 @@ public class FormUtama extends javax.swing.JFrame {
     private void bTambahRuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahRuanganActionPerformed
         FormTambahRuangan tr = new FormTambahRuangan();
         tr.setVisible(true);
-        tr.roleButton("simpan");
+        tr.roleButtonRuangan("simpan");
     }//GEN-LAST:event_bTambahRuanganActionPerformed
 
     private void bUbahHapusRuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahHapusRuanganActionPerformed
         int baris = tbRuangan.getSelectedRow();
         FormTambahRuangan tr = new FormTambahRuangan();
         tr.setVisible(true);
-        tr.roleButton("ubahhapus");
-        tr.getTextField(tbRuangan.getValueAt(baris, 0).toString());
+        tr.roleButtonRuangan("ubahhapus");
+        tr.getTextFieldRuangan(tbRuangan.getValueAt(baris, 0).toString());
     }//GEN-LAST:event_bUbahHapusRuanganActionPerformed
 
     private void tbRuanganMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRuanganMouseClicked
@@ -1103,11 +1252,10 @@ public class FormUtama extends javax.swing.JFrame {
 
     private void tCariRuanganCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tCariRuanganCaretUpdate
         getCariRuangan();
-        getResetTabelRiwayat();
     }//GEN-LAST:event_tCariRuanganCaretUpdate
 
     private void bMenuSesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMenuSesiActionPerformed
-        tpMenuUtama.setSelectedIndex(0);
+         tpMenuUtama.setSelectedIndex(0);
     }//GEN-LAST:event_bMenuSesiActionPerformed
 
     private void bMenuRuanganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMenuRuanganActionPerformed
@@ -1126,11 +1274,12 @@ public class FormUtama extends javax.swing.JFrame {
         tpMenuUtama.setSelectedIndex(3);
     }//GEN-LAST:event_bMenuNarasumberActionPerformed
 
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+    private void bTambahSesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahSesiActionPerformed
         FormTambahSesi fts = new FormTambahSesi();
         fts.setVisible(true);
         fts.getDataRuangan();
-    }//GEN-LAST:event_jButton13ActionPerformed
+        fts.roleButtonSesi("simpan");
+    }//GEN-LAST:event_bTambahSesiActionPerformed
 
     private void bPendaftaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPendaftaranActionPerformed
         FormPendaftaran fp = new FormPendaftaran();
@@ -1145,11 +1294,51 @@ public class FormUtama extends javax.swing.JFrame {
     private void tbSesiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSesiMouseClicked
         int baris = tbSesi.getSelectedRow();
         if (baris != -1) {
-            bUbahHapusSesi.setEnabled(true);
-            bPendaftaran.setEnabled(true);
             getDataPesertaSesi();
+            try{
+                Date tglMulai = sdf.parse(tbSesi.getValueAt(baris, 5).toString());
+                Date tglSelesai = sdf.parse(tbSesi.getValueAt(baris, 6).toString());
+                String x = sdf.format(new Date());
+                Date sekarang = sdf.parse(x);
+                int kuotaSesi = Integer.valueOf(tbSesi.getValueAt(baris, 7).toString());
+                int pesertaIkut = Integer.valueOf(lJumlahPeserta.getText());
+                //**************************************************************
+                if(tglMulai.compareTo(sekarang) < 0 && tglSelesai.compareTo(sekarang) < 0){
+                    bUbahHapusSesi.setEnabled(false);
+                    bPendaftaran.setEnabled(false);
+                    bPendaftaran.setText("Tutup");
+                }else if(kuotaSesi <= pesertaIkut){
+                    bUbahHapusSesi.setEnabled(true);
+                    bPendaftaran.setEnabled(false);
+                    bPendaftaran.setText("Penuh");
+                }else{
+                    bUbahHapusSesi.setEnabled(true);
+                    bPendaftaran.setEnabled(true);
+                    bPendaftaran.setText("Pendaftaran");
+                }
+            }catch(ParseException ex){
+                Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_tbSesiMouseClicked
+
+    private void tCariSesiCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tCariSesiCaretUpdate
+        getCariSesi();
+    }//GEN-LAST:event_tCariSesiCaretUpdate
+
+    private void bUbahHapusSesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahHapusSesiActionPerformed
+        int baris = tbSesi.getSelectedRow();
+        FormTambahSesi fts = new FormTambahSesi();
+        fts.setVisible(true);
+        fts.getComboNarasumber();
+        fts.getDataRuangan();
+        fts.roleButtonSesi("ubahhapus");
+        try {
+            fts.getTextFieldSesi(tbSesi.getValueAt(baris, 0).toString());
+        } catch (ParseException ex) {
+            Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bUbahHapusSesiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1197,6 +1386,7 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JButton bTambahNarasumber;
     private javax.swing.JButton bTambahPeserta;
     private javax.swing.JButton bTambahRuangan;
+    private javax.swing.JButton bTambahSesi;
     private javax.swing.JButton bUbahHapusMateri;
     private javax.swing.JButton bUbahHapusNarasumber;
     private javax.swing.JButton bUbahHapusPeserta;
@@ -1206,8 +1396,7 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.ButtonGroup bgCariNarasumber;
     private javax.swing.ButtonGroup bgCariPeserta;
     private javax.swing.ButtonGroup bgCariRuangan;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton16;
+    private javax.swing.ButtonGroup bgCariSesi;
     private javax.swing.JButton jButton17;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel15;
@@ -1249,7 +1438,6 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JLabel lJam;
     private javax.swing.JLabel lJumlahPeserta;
     private javax.swing.JPanel pDasar;
@@ -1264,14 +1452,17 @@ public class FormUtama extends javax.swing.JFrame {
     private javax.swing.JRadioButton rbCariByIDNarasumber;
     private javax.swing.JRadioButton rbCariByIDPeserta;
     private javax.swing.JRadioButton rbCariByIDRuangan;
+    private javax.swing.JRadioButton rbCariByIDSesi;
     private javax.swing.JRadioButton rbCariByNamaMateri;
     private javax.swing.JRadioButton rbCariByNamaNarasumber;
     private javax.swing.JRadioButton rbCariByNamaPeserta;
     private javax.swing.JRadioButton rbCariByNamaRuangan;
+    private javax.swing.JRadioButton rbCariByTemaSesi;
     private javax.swing.JTextField tCariMateri;
     private javax.swing.JTextField tCariNarasumber;
     private javax.swing.JTextField tCariPeserta;
     private javax.swing.JTextField tCariRuangan;
+    private javax.swing.JTextField tCariSesi;
     private javax.swing.JTable tbMateri;
     private javax.swing.JTable tbMateriNarasumber;
     private javax.swing.JTable tbNarasumber;

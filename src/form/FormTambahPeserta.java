@@ -7,6 +7,8 @@ package form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,22 +20,35 @@ import workshopapp.Koneksi;
  * @author Sultan
  */
 public class FormTambahPeserta extends javax.swing.JFrame {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    
+    /**
+     * Creates new form FormTambahPeserta
+     */
+    public FormTambahPeserta() {
+        initComponents();
+        lIdPeserta.setVisible(false);
+    }
 
-    public void roleButton(String role){
+    // rbPeserta
+    public void roleButtonPeserta(String role){
         if (role.equals("simpan")){
             bSimpanPeserta.setEnabled(true);
             bUbahPeserta.setEnabled(false);
             bHapusPeserta.setEnabled(false);
-            lIdPeserta.setVisible(false);
+            lJudulPeserta.setText("PESERTA BARU");
+            this.setTitle("Tambah Peserta Baru");
         }else if (role.equals("ubahhapus")){
             bSimpanPeserta.setEnabled(false);
             bUbahPeserta.setEnabled(true);
             bHapusPeserta.setEnabled(true);
-            lIdPeserta.setVisible(false);
+            lJudulPeserta.setText("UBAH/HAPUS PESERTA");
+            this.setTitle("Ubah/Hapus Peserta");
         }
     }
     
-    public int genID() {
+    // giPeserta
+    public int genIdPeserta() {
         Random r = new Random(System.currentTimeMillis());
         int number = 30000;
         for(int counter=1; counter<=1;counter++){
@@ -42,41 +57,8 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         return number;
     }
     
-    public void getSimpanPeserta(){
-        String bulanAngka = "Bulan";
-        if(cbBulanLahir.getSelectedItem().equals("Januari")){
-            bulanAngka = "01";
-        }else if(cbBulanLahir.getSelectedItem().equals("Pebruari")){
-            bulanAngka = "02";
-        }else if(cbBulanLahir.getSelectedItem().equals("Maret")){
-            bulanAngka = "03";
-        }
-        
-        String jenisKelamin = "jeniskelamin";
-        if (rbLakiLaki.isSelected()){
-            jenisKelamin = "Laki-Laki";
-        }else if (rbPerempuan.isSelected()){
-            jenisKelamin = "Perempuan";
-        }
-        
-        if ("".equals(tNamaPeserta.getText()) || "".equals(tNoTelpPeserta.getText()) || "".equals(tTempatLahir.getText()) || "".equals(tEmailPeserta.getText()) || "".equals(taAlamatPeserta.getText()) || jenisKelamin.equals("jeniskelamin") || "Tahun".equals(cbTahunLahir.getSelectedItem()) || "Bulan".equals(cbBulanLahir.getSelectedItem()) || "Tanggal".equals(cbTanggalLahir.getSelectedItem())) {
-            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
-        } else {
-            String SQL = "INSERT INTO peserta (id_peserta, nama_peserta, no_telp, jenis_kelamin, tempat_lahir, tanggal_lahir, email, alamat) "
-                    + "VALUES('PES-2018"+genID()+"','"+tNamaPeserta.getText()+"','"+tNoTelpPeserta.getText()+"','"+jenisKelamin+"','"+tTempatLahir.getText()+"','"+cbTahunLahir.getSelectedItem()+"-"+bulanAngka+"-"+cbTanggalLahir.getSelectedItem()+"','"+tEmailPeserta.getText()+"','"+taAlamatPeserta.getText()+"')";
-            int status = Koneksi.execute(SQL);
-            if (status == 1) {
-                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                FormUtama fu = new FormUtama();
-                fu.getDataPeserta();
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Data gagal ditambahkan", "Gagal", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-    }
-    
-    public void getTextField(String id){
+    //gtfPeserta
+    public void getTextFieldPeserta(String id) throws ParseException{
         String SQL = "SELECT id_peserta, nama_peserta, no_telp, jenis_kelamin, tempat_lahir, tanggal_lahir, email, alamat FROM peserta where id_peserta = '"+id+"'";
         ResultSet rs = Koneksi.executeQuery(SQL);
         try {
@@ -86,46 +68,47 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                 }else{
                     rbLakiLaki.setSelected(true);
                 }
-                
-                String tanggal = rs.getString(6).substring(8, 10);
-                String bulan = rs.getString(6).substring(5, 7);
-                String tahun = rs.getString(6).substring(0, 4);
-                String bulanHuruf = "Bulan";
-                if(bulan.equals("01")){
-                    bulanHuruf = "Januari";
-                }else if(bulan.equals("02")){
-                    bulanHuruf = "Pebruari";
-                }else if(bulan.equals("03")){
-                    bulanHuruf = "Maret";
-                }else{
-                    bulanHuruf = "Bulan";
-                }
-                cbTanggalLahir.setSelectedItem(tanggal);
-                cbBulanLahir.setSelectedItem(bulanHuruf);
-                cbTahunLahir.setSelectedItem(tahun);
-                
                 lIdPeserta.setText(rs.getString(1));
                 tNamaPeserta.setText(rs.getString(2));
                 tNoTelpPeserta.setText(rs.getString(3));
                 tTempatLahir.setText(rs.getString(5));
+                dcTanggal.setDate(sdf.parse(rs.getString(6)));
                 tEmailPeserta.setText(rs.getString(7));
                 taAlamatPeserta.setText(rs.getString(8));
             }
+            System.out.println("getTextFieldPeserta() berhasil...");
         } catch (SQLException ex) {
             Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void getUbahPeserta(){
-        String bulanAngka = "Bulan";
-        if(cbBulanLahir.getSelectedItem().equals("Januari")){
-            bulanAngka = "01";
-        }else if(cbBulanLahir.getSelectedItem().equals("Pebruari")){
-            bulanAngka = "02";
-        }else if(cbBulanLahir.getSelectedItem().equals("Maret")){
-            bulanAngka = "03";
+    // gsPeserta
+    public void getSimpanPeserta(){
+        String jenisKelamin = "jeniskelamin";
+        if (rbLakiLaki.isSelected()){
+            jenisKelamin = "Laki-Laki";
+        }else if (rbPerempuan.isSelected()){
+            jenisKelamin = "Perempuan";
         }
         
+        if("".equals(tNamaPeserta.getText()) || "".equals(tNoTelpPeserta.getText()) || "".equals(tTempatLahir.getText()) || "".equals(dcTanggal.getDate()) || "".equals(tEmailPeserta.getText()) || "".equals(taAlamatPeserta.getText()) || jenisKelamin.equals("jeniskelamin")) {
+            JOptionPane.showMessageDialog(this, "Harap lengkapi data !", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        }else{
+            String SQL = "INSERT INTO peserta (id_peserta, nama_peserta, no_telp, jenis_kelamin, tempat_lahir, tanggal_lahir, email, alamat) "
+                    + "VALUES('PES-2018"+genIdPeserta()+"','"+tNamaPeserta.getText()+"','"+tNoTelpPeserta.getText()+"','"+jenisKelamin+"','"+tTempatLahir.getText()+"','"+sdf.format(dcTanggal.getDate())+"','"+tEmailPeserta.getText()+"','"+taAlamatPeserta.getText()+"')";
+            int status = Koneksi.execute(SQL);
+            if (status == 1){
+                JOptionPane.showMessageDialog(this, "Peserta baru berhasil ditambahkan", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getSimpanPeserta() berhasil...");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Peserta gagal ditambahkan", "Gagal", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    // guPeserta
+    public void getUbahPeserta(){
         String jenisKelamin = "";
         if (rbLakiLaki.isSelected()){
             jenisKelamin = "Laki-Laki";
@@ -133,56 +116,47 @@ public class FormTambahPeserta extends javax.swing.JFrame {
             jenisKelamin = "Perempuan";
         }
         
-        if ("".equals(tNamaPeserta.getText()) || "".equals(tNoTelpPeserta.getText()) || "".equals(tTempatLahir.getText()) || "".equals(tEmailPeserta.getText()) || "".equals(taAlamatPeserta.getText()) || jenisKelamin.equals("jeniskelamin") || "Tahun".equals(cbTahunLahir.getSelectedItem()) || "Bulan".equals(cbBulanLahir.getSelectedItem()) || "Tanggal".equals(cbTanggalLahir.getSelectedItem())) {
-            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
+        if ("".equals(tNamaPeserta.getText()) || "".equals(tNoTelpPeserta.getText()) || "".equals(tTempatLahir.getText()) || "".equals(dcTanggal.getDate()) || "".equals(tEmailPeserta.getText()) || "".equals(taAlamatPeserta.getText()) || jenisKelamin.equals("jeniskelamin")) {
+            JOptionPane.showMessageDialog(this, "Harap lengkapi data !", "Peringatan", JOptionPane.WARNING_MESSAGE);
         } else {
             String SQL = "UPDATE peserta SET "
                     + "nama_peserta = '"+tNamaPeserta.getText()+"',"
                     + "no_telp = '"+tNoTelpPeserta.getText()+"',"
                     + "jenis_kelamin = '"+jenisKelamin+"',"
                     + "tempat_lahir = '"+tTempatLahir.getText()+"',"
-                    + "tanggal_lahir = '"+cbTahunLahir.getSelectedItem()+"-"+bulanAngka+"-"+cbTanggalLahir.getSelectedItem()+"',"
+                    + "tanggal_lahir = '"+sdf.format(dcTanggal.getDate())+"',"
                     + "email = '"+tEmailPeserta.getText()+"',"
                     + "alamat = '"+taAlamatPeserta.getText()+"' "
                     + "WHERE id_peserta='"+lIdPeserta.getText()+"'";
             int status = Koneksi.execute(SQL);
             if (status == 1) {
-                JOptionPane.showMessageDialog(this, "Data berhasil diupdate", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                FormUtama fu = new FormUtama();
-                fu.getDataPeserta();
+                JOptionPane.showMessageDialog(this, "Peserta berhasil diubah", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getUbahPeserta() berhasil...");
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Data gagal diupdate", "Sukses", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Peserta gagal diubah", "Gagal", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
     
+    // ghPeserta
     public void getHapusPeserta(){
-        int reply = JOptionPane.showConfirmDialog(this, "Apakah anda yakin akan menghapus data peserta dengan ID = "+lIdPeserta.getText(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        int reply = JOptionPane.showConfirmDialog(this, "Apakah anda yakin akan menghapus data Peserta '"+tNamaPeserta.getText()+"'", "Konfirmasi", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             String SQL = "DELETE FROM peserta WHERE id_peserta = '"+lIdPeserta.getText()+"'";
             int status = Koneksi.execute(SQL);
-            
-            if (status==1) {
-                JOptionPane.showMessageDialog(this, "Data berhasil dihapus", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                FormUtama fu = new FormUtama();
-                fu.getDataPeserta();
+            if (status == 1) {
+                JOptionPane.showMessageDialog(this, "Peserta '"+tNamaPeserta.getText()+"' berhasil dihapus", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getHapusPeserta() berhasil...");
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Data gagal dihapus", "Gagal", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Peserta '"+tNamaPeserta.getText()+"' gagal dihapus", "Gagal", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(this, "Hmmm.!!! -___-");
         }
     }
     
-    /**
-     * Creates new form FormTambahPeserta
-     */
-    public FormTambahPeserta() {
-        initComponents();
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -213,12 +187,10 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         bSimpanPeserta = new javax.swing.JButton();
         bUbahPeserta = new javax.swing.JButton();
         bHapusPeserta = new javax.swing.JButton();
-        cbTanggalLahir = new javax.swing.JComboBox<>();
-        cbBulanLahir = new javax.swing.JComboBox<>();
-        cbTahunLahir = new javax.swing.JComboBox<>();
         lIdPeserta = new javax.swing.JLabel();
+        dcTanggal = new com.toedter.calendar.JDateChooser();
         jPanel3 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
+        lJudulPeserta = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Peserta Baru");
@@ -299,29 +271,21 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 190, 110, 100));
 
-        cbTanggalLahir.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tanggal", "01", "02", "03" }));
-        jPanel1.add(cbTanggalLahir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 130, 80, -1));
-
-        cbBulanLahir.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bulan", "Januari", "Pebruari", "Maret" }));
-        jPanel1.add(cbBulanLahir, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 130, 100, -1));
-
-        cbTahunLahir.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tahun", "1990", "1991", "1992", "1993" }));
-        jPanel1.add(cbTahunLahir, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 130, 70, -1));
-
         lIdPeserta.setText("id_peserta");
         jPanel1.add(lIdPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, -1, -1));
+        jPanel1.add(dcTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 130, 170, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 430, 300));
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel8.setText("PESERTA BARU");
-        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
+        lJudulPeserta.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lJudulPeserta.setText("JUDUL");
+        jPanel3.add(lJudulPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 430, 70));
 
-        pack();
+        setSize(new java.awt.Dimension(445, 409));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -376,9 +340,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JButton bHapusPeserta;
     private javax.swing.JButton bSimpanPeserta;
     private javax.swing.JButton bUbahPeserta;
-    private javax.swing.JComboBox<String> cbBulanLahir;
-    private javax.swing.JComboBox<String> cbTahunLahir;
-    private javax.swing.JComboBox<String> cbTanggalLahir;
+    private com.toedter.calendar.JDateChooser dcTanggal;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -386,12 +348,12 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lIdPeserta;
+    private javax.swing.JLabel lJudulPeserta;
     private javax.swing.ButtonGroup rbJenisKelamin;
     private javax.swing.JRadioButton rbLakiLaki;
     private javax.swing.JRadioButton rbPerempuan;

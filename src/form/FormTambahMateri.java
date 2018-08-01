@@ -17,23 +17,35 @@ import workshopapp.Koneksi;
  *
  * @author Sultan
  */
-public class FormTambahMateri extends javax.swing.JFrame {
+public class FormTambahMateri extends javax.swing.JFrame{
+    
+    /**
+     * Creates new form FormTambahMateri
+     */
+    public FormTambahMateri(){
+        initComponents();
+        lIdMateri.setVisible(false);
+    }
 
-    public void roleButton(String role){
+    // rbMateri
+    public void roleButtonMateri(String role){
         if (role.equals("simpan")){
             bSimpanMateri.setEnabled(true);
             bUbahMateri.setEnabled(false);
             bHapusMateri.setEnabled(false);
-            lIdMateri.setVisible(false);
+            lJudulMateri.setText("MATERI BARU");
+            this.setTitle("Tambah Materi Baru");
         }else if (role.equals("ubahhapus")){
             bSimpanMateri.setEnabled(false);
             bUbahMateri.setEnabled(true);
             bHapusMateri.setEnabled(true);
-            lIdMateri.setVisible(false);
+            lJudulMateri.setText("UBAH/HAPUS MATERI");
+            this.setTitle("Ubah/Hapus Materi");
         }
     }
     
-    public int genID() {
+    //giMateri
+    public int genIdMateri() {
         Random r = new Random(System.currentTimeMillis());
         int number = 10000;
         for(int counter=1; counter<=1;counter++){
@@ -42,25 +54,8 @@ public class FormTambahMateri extends javax.swing.JFrame {
         return number;
     }
     
-    public void getSimpanMateri(){
-        if ("".equals(tNamaMateri.getText())) {
-            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
-        } else {
-            String SQL = "INSERT INTO tb_materi (id_materi, nama_materi) "
-                    + "VALUES('MAT-2018"+genID()+"','"+tNamaMateri.getText()+"')";
-            int status = Koneksi.execute(SQL);
-            if (status == 1) {
-                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                FormUtama fu = new FormUtama();
-                fu.getDataMateri();
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Data gagal ditambahkan", "Sukses", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-    }
-    
-    public void getTextField(String id){
+    // gtfMateri
+    public void getTextFieldMateri(String id){
         String SQL = "SELECT * FROM tb_materi where id_materi = '"+id+"'";
         ResultSet rs = Koneksi.executeQuery(SQL);
         try {
@@ -68,56 +63,67 @@ public class FormTambahMateri extends javax.swing.JFrame {
                 lIdMateri.setText(rs.getString(1));
                 tNamaMateri.setText(rs.getString(2));
             }
+            System.out.println("getTextFieldMateri() berhasil...");
         } catch (SQLException ex) {
             Logger.getLogger(FormUtama.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    //gsMateri
+    public void getSimpanMateri(){
+        if ("".equals(tNamaMateri.getText())) {
+            JOptionPane.showMessageDialog(this, "Harap lengkapi data !", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        } else {
+            String SQL = "INSERT INTO tb_materi (id_materi, nama_materi) "
+                    + "VALUES('MAT-2018"+genIdMateri()+"','"+tNamaMateri.getText()+"')";
+            int status = Koneksi.execute(SQL);
+            if (status == 1) {
+                JOptionPane.showMessageDialog(this, "Materi baru berhasil ditambahkan", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getSimpanMateri() berhasil...");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Materi gagal ditambahkan", "Gagal", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    // guMateri
     public void getUbahMateri(){
         if ("".equals(tNamaMateri.getText())) {
-            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Harap lengkapi data !", "Peringatan", JOptionPane.WARNING_MESSAGE);
         } else {
             String SQL = "UPDATE tb_materi SET "
                     + "nama_materi = '"+tNamaMateri.getText()+"' "
                     + "WHERE id_materi='"+lIdMateri.getText()+"'";
             int status = Koneksi.execute(SQL);
             if (status == 1) {
-                JOptionPane.showMessageDialog(this, "Data berhasil diupdate", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                FormUtama fu = new FormUtama();
-                fu.getDataMateri();
+                JOptionPane.showMessageDialog(this, "Materi berhasil diubah", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getUbahMateri() berhasil...");
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Data gagal diupdate", "Sukses", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Materi gagal diubah", "Gagal", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
     
+    //ghMateri
     public void getHapusMateri(){
-        int reply = JOptionPane.showConfirmDialog(this, "Apakah anda yakin akan menghapus data materi dengan ID = "+lIdMateri.getText(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        int reply = JOptionPane.showConfirmDialog(this, "Apakah anda yakin akan menghapus data Materi '"+tNamaMateri.getText()+"'", "Konfirmasi", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             String SQL = "DELETE FROM tb_materi WHERE id_materi = '"+lIdMateri.getText()+"'";
             int status = Koneksi.execute(SQL);
-            
-            if (status==1) {
-                JOptionPane.showMessageDialog(this, "Data berhasil dihapus", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                FormUtama fu = new FormUtama();
-                fu.getDataMateri();
+            if (status == 1) {
+                JOptionPane.showMessageDialog(this, "Materi '"+tNamaMateri.getText()+"' berhasil dihapus", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getHapusMateri() berhasil...");
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Data gagal dihapus", "Gagal", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Materi '"+tNamaMateri.getText()+"' gagal dihapus", "Gagal", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(this, "Hmmm.!!! -___-");
         }
     }
     
-    /**
-     * Creates new form FormTambahMateri
-     */
-    public FormTambahMateri() {
-        initComponents();
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -128,7 +134,7 @@ public class FormTambahMateri extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
+        lJudulMateri = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         tNamaMateri = new javax.swing.JTextField();
@@ -143,9 +149,9 @@ public class FormTambahMateri extends javax.swing.JFrame {
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel8.setText("MATERI BARU");
-        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
+        lJudulMateri.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lJudulMateri.setText("JUDUL");
+        jPanel3.add(lJudulMateri, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 430, 70));
 
@@ -217,7 +223,7 @@ public class FormTambahMateri extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows Classic".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -246,11 +252,11 @@ public class FormTambahMateri extends javax.swing.JFrame {
     private javax.swing.JButton bSimpanMateri;
     private javax.swing.JButton bUbahMateri;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lIdMateri;
+    private javax.swing.JLabel lJudulMateri;
     private javax.swing.JTextField tNamaMateri;
     // End of variables declaration//GEN-END:variables
 }

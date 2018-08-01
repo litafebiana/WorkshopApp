@@ -29,6 +29,15 @@ public class FormCRUD extends javax.swing.JFrame {
     DefaultListModel model2 = new DefaultListModel();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     
+    public void getKurangTanggal(){
+        Date tanggal1 = dcTanggal1.getDate();
+        Date tanggal2 = dcTanggal2.getDate();
+        
+        long selisih = tanggal2.getTime() - tanggal1.getTime();
+        int day = (int) ((selisih / (24 * 60 * 60 * 1000))+1);
+        lHasil.setText(String.valueOf(day));
+    }
+    
     public void getData(){
         String kolom[] = {"Nama","Kelas","Jurusan"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
@@ -108,13 +117,16 @@ public class FormCRUD extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         lTanggal = new javax.swing.JLabel();
-        dcTanggal = new com.toedter.calendar.JDateChooser();
+        dcTanggal1 = new com.toedter.calendar.JDateChooser();
         tMasukinTanggal = new javax.swing.JTextField();
         bSetTanggal = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
         tLama = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         lNewDate = new javax.swing.JLabel();
+        dcTanggal2 = new com.toedter.calendar.JDateChooser();
+        jButton5 = new javax.swing.JButton();
+        lHasil = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -256,7 +268,7 @@ public class FormCRUD extends javax.swing.JFrame {
 
         lTanggal.setText("Date");
         jPanel5.add(lTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, -1, 20));
-        jPanel5.add(dcTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 230, -1));
+        jPanel5.add(dcTanggal1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 110, -1));
         jPanel5.add(tMasukinTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 150, -1));
 
         bSetTanggal.setText("set");
@@ -281,6 +293,18 @@ public class FormCRUD extends javax.swing.JFrame {
 
         lNewDate.setText("jLabel6");
         jPanel5.add(lNewDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, -1));
+        jPanel5.add(dcTanggal2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 40, 110, -1));
+
+        jButton5.setText("Kurang");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jPanel5.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
+
+        lHasil.setText("Hasil");
+        jPanel5.add(lHasil, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, -1, -1));
 
         getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 180, 250, 250));
 
@@ -337,12 +361,12 @@ public class FormCRUD extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-         lTanggal.setText(sdf.format(dcTanggal.getDate()));
+        lTanggal.setText(sdf.format(dcTanggal1.getDate()));
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void bSetTanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSetTanggalActionPerformed
         try {
-            dcTanggal.setDate(sdf.parse(tMasukinTanggal.getText()));
+            dcTanggal1.setDate(sdf.parse(tMasukinTanggal.getText()));
         } catch (ParseException ex) {
             Logger.getLogger(FormCRUD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -351,11 +375,15 @@ public class FormCRUD extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         int lama = Integer.parseInt(tLama.getText()) - 1;
         Calendar c = Calendar.getInstance();
-        c.setTime(dcTanggal.getDate());
+        c.setTime(dcTanggal1.getDate());
         c.add(Calendar.DATE, lama);
         Date newDate = c.getTime();
         lNewDate.setText(String.valueOf(sdf.format(newDate)));
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        getKurangTanggal();
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -402,11 +430,13 @@ public class FormCRUD extends javax.swing.JFrame {
     private javax.swing.JButton bPindahKiriSemua;
     private javax.swing.JButton bSetTanggal;
     private javax.swing.JButton bSimpan;
-    private com.toedter.calendar.JDateChooser dcTanggal;
+    private com.toedter.calendar.JDateChooser dcTanggal1;
+    private com.toedter.calendar.JDateChooser dcTanggal2;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -421,6 +451,7 @@ public class FormCRUD extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lHasil;
     private javax.swing.JList<String> lKanan;
     private javax.swing.JList<String> lKiri;
     private javax.swing.JLabel lNewDate;

@@ -19,21 +19,33 @@ import workshopapp.Koneksi;
  */
 public class FormTambahRuangan extends javax.swing.JFrame {
 
-    public void roleButton(String role){
+    /**
+     * Creates new form FormTambahRuangan
+     */
+    public FormTambahRuangan() {
+        initComponents();
+        lIdRuangan.setVisible(false);
+    }
+
+    // rbRuangan
+    public void roleButtonRuangan(String role){
         if (role.equals("simpan")){
             bSimpanRuangan.setEnabled(true);
             bUbahRuangan.setEnabled(false);
             bHapusRuangan.setEnabled(false);
-            lIdRuangan.setVisible(false);
+            lJudulRuangan.setText("RUANGAN BARU");
+            this.setTitle("Tambah Ruangan Baru");
         }else if (role.equals("ubahhapus")){
             bSimpanRuangan.setEnabled(false);
             bUbahRuangan.setEnabled(true);
             bHapusRuangan.setEnabled(true);
-            lIdRuangan.setVisible(false);
+            lJudulRuangan.setText("UBAH/HAPUS RUANGAN");
+            this.setTitle("Ubah/Hapus Ruangan");
         }
     }
     
-    public int genID() {
+    // giRuangan
+    public int genIdRuangan() {
         Random r = new Random(System.currentTimeMillis());
         int number = 100;
         for(int counter=1; counter<=1;counter++){
@@ -42,25 +54,8 @@ public class FormTambahRuangan extends javax.swing.JFrame {
         return number;
     }
     
-    public void getSimpanRuangan(){
-        if ("".equals(tNamaRuangan.getText()) || "".equals(tKapasitas.getText())) {
-            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
-        } else {
-            String SQL = "INSERT INTO tb_ruangan (id_ruangan, nama_ruangan, kapasitas) "
-                    + "VALUES('RUANG-2018"+genID()+"','"+tNamaRuangan.getText()+"','"+tKapasitas.getText()+"')";
-            int status = Koneksi.execute(SQL);
-            if (status == 1) {
-                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                FormUtama fu = new FormUtama();
-                fu.getDataRuangan();
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Data gagal ditambahkan", "Sukses", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-    }
-    
-    public void getTextField(String id){
+    //gtfRuangan
+    public void getTextFieldRuangan(String id){
         String SQL = "SELECT * FROM tb_ruangan where id_ruangan = '"+id+"'";
         ResultSet rs = Koneksi.executeQuery(SQL);
         try {
@@ -69,14 +64,34 @@ public class FormTambahRuangan extends javax.swing.JFrame {
                 tNamaRuangan.setText(rs.getString(2));
                 tKapasitas.setText(rs.getString(3));
             }
+            System.out.println("getTextFieldRuangan() berhasil...");
         } catch (SQLException ex) {
             Logger.getLogger(FormTambahRuangan.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    // gsRuangan
+    public void getSimpanRuangan(){
+        if ("".equals(tNamaRuangan.getText()) || "".equals(tKapasitas.getText())) {
+            JOptionPane.showMessageDialog(this, "Harap lengkapi data !", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        } else {
+            String SQL = "INSERT INTO tb_ruangan (id_ruangan, nama_ruangan, kapasitas) "
+                    + "VALUES('RUANG-2018"+genIdRuangan()+"','"+tNamaRuangan.getText()+"','"+tKapasitas.getText()+"')";
+            int status = Koneksi.execute(SQL);
+            if (status == 1) {
+                JOptionPane.showMessageDialog(this, "Ruangan baru berhasil ditambahkan", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getSimpanRuangan() berhasil...");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Ruangan gagal ditambahkan", "Gagal", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    // guRuangan
     public void getUbahRuangan(){
         if ("".equals(tNamaRuangan.getText()) || "".equals(tKapasitas.getText())) {
-            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Harap lengkapi data !", "Peringatan", JOptionPane.WARNING_MESSAGE);
         } else {
             String SQL = "UPDATE tb_ruangan SET "
                     + "nama_ruangan = '"+tNamaRuangan.getText()+"',"
@@ -84,42 +99,33 @@ public class FormTambahRuangan extends javax.swing.JFrame {
                     + "WHERE id_ruangan='"+lIdRuangan.getText()+"'";
             int status = Koneksi.execute(SQL);
             if (status == 1) {
-                JOptionPane.showMessageDialog(this, "Data berhasil diupdate", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                FormUtama fu = new FormUtama();
-                fu.getDataRuangan();
+                JOptionPane.showMessageDialog(this, "Ruangan berhasil diubah", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getUbahRuangan() berhasil...");
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Data gagal diupdate", "Sukses", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ruangan gagal diubah", "Gagal", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
     
+    // ghRuangan
     public void getHapusRuangan(){
-        int reply = JOptionPane.showConfirmDialog(this, "Apakah anda yakin akan menghapus data ruangan dengan ID = "+lIdRuangan.getText(), "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        int reply = JOptionPane.showConfirmDialog(this, "Apakah anda yakin akan menghapus data Ruangan '"+tNamaRuangan.getText()+"'", "Konfirmasi", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             String SQL = "DELETE FROM tb_ruangan WHERE id_ruangan = '"+lIdRuangan.getText()+"'";
             int status = Koneksi.execute(SQL);
-            
-            if (status==1) {
-                JOptionPane.showMessageDialog(this, "Data berhasil dihapus", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                FormUtama fu = new FormUtama();
-                fu.getDataRuangan();
+            if (status == 1) {
+                JOptionPane.showMessageDialog(this, "Ruangan '"+tNamaRuangan.getText()+"' berhasil dihapus", "Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("getHapusRuangan() berhasil...");
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Data gagal dihapus", "Gagal", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ruangan '"+tNamaRuangan.getText()+"' gagal dihapus", "Gagal", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(this, "Hmmm.!!! -___-");
         }
     }
     
-    /**
-     * Creates new form FormTambahRuangan
-     */
-    public FormTambahRuangan() {
-        initComponents();
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -130,7 +136,7 @@ public class FormTambahRuangan extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
+        lJudulRuangan = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         tNamaRuangan = new javax.swing.JTextField();
@@ -147,9 +153,9 @@ public class FormTambahRuangan extends javax.swing.JFrame {
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel8.setText("RUANGAN BARU");
-        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
+        lJudulRuangan.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lJudulRuangan.setText("JUDUL");
+        jPanel3.add(lJudulRuangan, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 430, 70));
 
@@ -255,11 +261,11 @@ public class FormTambahRuangan extends javax.swing.JFrame {
     private javax.swing.JButton bUbahRuangan;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lIdRuangan;
+    private javax.swing.JLabel lJudulRuangan;
     private javax.swing.JTextField tKapasitas;
     private javax.swing.JTextField tNamaRuangan;
     // End of variables declaration//GEN-END:variables
