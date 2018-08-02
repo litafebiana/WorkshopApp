@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Kartu Anggota" pageWidth="255" pageHeight="170" whenNoDataType="NoDataSection" columnWidth="239" leftMargin="8" rightMargin="8" topMargin="8" bottomMargin="8" whenResourceMissingType="Error" isIgnorePagination="true" uuid="80788662-037d-46b5-9aa6-2a15035eb25c">
+	<property name="ireport.zoom" value="3.000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="19"/>
+	<parameter name="idPeserta" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT id_peserta, nama_peserta, alamat FROM peserta WHERE id_peserta = $P{idPeserta}]]>
+	</queryString>
+	<field name="id_peserta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nama_peserta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="alamat" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="29" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="239" height="29" uuid="d65dab10-51b9-45bb-a6cb-8a92e9210c30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="18" isBold="true" isUnderline="false" pdfEncoding="Identity-V" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Kartu Anggota]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="127" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="239" height="1" uuid="35f4c3d7-4dc2-4ed6-ba0a-b1276013671c"/>
+			</line>
+			<staticText>
+				<reportElement x="4" y="15" width="16" height="15" uuid="0014ba6b-18b4-428e-95ac-a848a7ed2c9e"/>
+				<textElement>
+					<font fontName="Calibri" isBold="true" pdfEncoding="Identity-V" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ID :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="4" y="28" width="146" height="20" uuid="7e9ffaa3-5196-4254-bd35-f1c0a8d319e5"/>
+				<textElement>
+					<font fontName="Calibri Light" size="12" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nama_peserta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="54" width="100" height="44" uuid="cd274c3e-6689-4fcd-b6e7-b6722c6c0212"/>
+				<textElement>
+					<font fontName="Calibri Light" size="8" pdfEncoding="Identity-V" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{alamat}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="154" y="29" width="84" height="78" uuid="35199b66-3da6-4923-a867-d65ad5874001"/>
+				<imageExpression><![CDATA["E:\\Campus\\documents-campus\\Semester 6 Paket Y\\Pemrograman Visual\\Program Tugas\\WorkshopApp\\src\\sources\\s.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement mode="Transparent" x="20" y="15" width="146" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="cbbec2aa-5b72-44d2-a6c1-721c1f04caba"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Calibri" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-V" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{idPeserta}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="-4" y="103" width="150" height="21" uuid="6dbd5913-fe39-4eeb-9de0-c6b178e72dec"/>
+				<imageExpression><![CDATA["E:\\Campus\\documents-campus\\Semester 6 Paket Y\\Pemrograman Visual\\Program Tugas\\WorkshopApp\\src\\sources\\barcode.png"]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

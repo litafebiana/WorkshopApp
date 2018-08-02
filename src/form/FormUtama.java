@@ -624,7 +624,7 @@ public class FormUtama extends javax.swing.JFrame {
         jLabel5.setText("JUDUL PROGRAM");
         pJudulProgram.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 350, 50));
 
-        pDasar.add(pJudulProgram, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 780, -1));
+        pDasar.add(pJudulProgram, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 780, 60));
 
         tpMenuUtama.setBackground(new java.awt.Color(255, 255, 255));
         tpMenuUtama.setEnabled(false);

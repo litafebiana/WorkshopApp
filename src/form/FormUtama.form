@@ -79,7 +79,7 @@
         <Container class="javax.swing.JPanel" name="pJudulProgram">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="10" y="10" width="780" height="-1"/>
+              <AbsoluteConstraints x="10" y="10" width="780" height="60"/>
             </Constraint>
           </Constraints>
 

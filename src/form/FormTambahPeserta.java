@@ -5,14 +5,22 @@
  */
 package form;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 import workshopapp.Koneksi;
 
 /**
@@ -157,6 +165,20 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         }
     }
     
+    public void getCetakKartu(){
+        try{
+            String jrxmlFile = "src/laporan/KartuAnggota.jrxml";
+            Connection con = Koneksi.setKoneksi();
+            HashMap param = new HashMap();
+            param.put("idPeserta", lIdPeserta.getText());
+            JasperReport JRpt =JasperCompileManager.compileReport(jrxmlFile);
+            JasperPrint JPrint = JasperFillManager.fillReport(JRpt, param,con);   
+            JasperViewer.viewReport(JPrint, false);
+        }catch(JRException e){
+            JOptionPane.showMessageDialog(rootPane, e);
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -187,6 +209,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         bSimpanPeserta = new javax.swing.JButton();
         bUbahPeserta = new javax.swing.JButton();
         bHapusPeserta = new javax.swing.JButton();
+        bCetakKartu = new javax.swing.JButton();
         lIdPeserta = new javax.swing.JLabel();
         dcTanggal = new com.toedter.calendar.JDateChooser();
         jPanel3 = new javax.swing.JPanel();
@@ -210,37 +233,38 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, -1));
 
         jLabel4.setText("Tempat Lahir");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, -1, -1));
 
         jLabel5.setText("Tanggal Lahir");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, -1, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, -1));
 
         jLabel6.setText("Email");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, -1, -1));
 
         jLabel7.setText("Alamat");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, -1));
-        jPanel1.add(tNamaPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 290, -1));
-        jPanel1.add(tNoTelpPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 40, 290, -1));
-        jPanel1.add(tTempatLahir, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 100, 290, -1));
-        jPanel1.add(tEmailPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 160, 290, -1));
+        jPanel1.add(tNamaPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 10, 300, -1));
+        jPanel1.add(tNoTelpPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 40, 300, -1));
+        jPanel1.add(tTempatLahir, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, 300, -1));
+        jPanel1.add(tEmailPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, 300, -1));
 
         rbLakiLaki.setBackground(new java.awt.Color(204, 204, 204));
         rbJenisKelamin.add(rbLakiLaki);
         rbLakiLaki.setSelected(true);
         rbLakiLaki.setText("Laki-Laki");
-        jPanel1.add(rbLakiLaki, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 70, -1));
+        jPanel1.add(rbLakiLaki, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 70, 70, -1));
 
         rbPerempuan.setBackground(new java.awt.Color(204, 204, 204));
         rbJenisKelamin.add(rbPerempuan);
         rbPerempuan.setText("Perempuan");
-        jPanel1.add(rbPerempuan, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 70, 90, -1));
+        jPanel1.add(rbPerempuan, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 70, 90, -1));
 
         taAlamatPeserta.setColumns(20);
         taAlamatPeserta.setRows(5);
+        taAlamatPeserta.setWrapStyleWord(true);
         jScrollPane1.setViewportView(taAlamatPeserta);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 190, 170, 100));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, 170, 100));
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -251,7 +275,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                 bSimpanPesertaActionPerformed(evt);
             }
         });
-        jPanel2.add(bSimpanPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 90, 20));
+        jPanel2.add(bSimpanPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 100, 20));
 
         bUbahPeserta.setText("Ubah");
         bUbahPeserta.addActionListener(new java.awt.event.ActionListener() {
@@ -259,7 +283,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                 bUbahPesertaActionPerformed(evt);
             }
         });
-        jPanel2.add(bUbahPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 90, 20));
+        jPanel2.add(bUbahPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 100, 20));
 
         bHapusPeserta.setText("Hapus");
         bHapusPeserta.addActionListener(new java.awt.event.ActionListener() {
@@ -267,13 +291,21 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                 bHapusPesertaActionPerformed(evt);
             }
         });
-        jPanel2.add(bHapusPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 90, 20));
+        jPanel2.add(bHapusPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 100, 20));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 190, 110, 100));
+        bCetakKartu.setText("Cetak Kartu");
+        bCetakKartu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCetakKartuActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bCetakKartu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 100, 20));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 160, 120, 130));
 
         lIdPeserta.setText("id_peserta");
         jPanel1.add(lIdPeserta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, -1, -1));
-        jPanel1.add(dcTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 130, 170, -1));
+        jPanel1.add(dcTanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 160, 170, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 430, 300));
 
@@ -300,6 +332,10 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private void bHapusPesertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusPesertaActionPerformed
         getHapusPeserta();
     }//GEN-LAST:event_bHapusPesertaActionPerformed
+
+    private void bCetakKartuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCetakKartuActionPerformed
+        getCetakKartu();
+    }//GEN-LAST:event_bCetakKartuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -337,6 +373,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bCetakKartu;
     private javax.swing.JButton bHapusPeserta;
     private javax.swing.JButton bSimpanPeserta;
     private javax.swing.JButton bUbahPeserta;
